@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title >Hệ thống quản lý phòng họp PVGAS LOGISITICS</title>
+    <title >Hệ thống quản lý Phòng họp, lịch công tác PVGAS LOGISITICS</title>
     <link rel="stylesheet" href="{{ asset('css/meeting.css') }}">
 </head>
 <body>
@@ -26,12 +26,12 @@
                 </a>
                 <a class="tab" href="{{ route('admin.users.index') }}">NHÂN SỰ</a>
                 <a class="tab" href="{{ route('admin.rooms.index') }}">DANH SÁCH PHÒNG</a>
-                <a class="tab" href="{{ route('admin.schedule.work-schedule') }}" style="border-radius: 6px; margin-right: 0px;">LỊCH CÔNG TÁC</a>
+                <a class="tab" href="{{ route('admin.schedule.work-schedule') }}" style="border-radius: 6px; margin-right: 0px;">LỊCH CÔNG TÁC BGĐ</a>
             @else
                 <h5>|</h5>
                 <a class="tab" href="{{ route('schedule.my-bookings') }}" style="border-radius: 6px; margin-left: 0px;">LỊCH CỦA TÔI</a>
                 <h4>|</h4>
-                <a class="tab" href="{{ route('schedule.work-schedule') }}" style="border-radius: 6px; margin-right: 0px;">LỊCH CÔNG TÁC</a>
+                <a class="tab" href="{{ route('schedule.work-schedule') }}" style="border-radius: 6px; margin-right: 0px;">LỊCH CÔNG TÁC BGĐ</a>
             @endif
             <!-- <button class="icon-btn" type="button" aria-label="Trợ giúp">?</button> -->
             <!-- <button class="icon-btn" type="button" aria-label="Thông báo">
@@ -99,13 +99,13 @@
             </div>
 
             
-            <div style="text-align: center; margin-bottom: 16px; font-weight: bold; color: #555; font-size: 26px;">
+            <div style="text-align: center; margin-bottom: 16px; font-weight: bold; color: #555; font-size: 24px;">
                 <p>DỰ KIẾN LỊCH CÔNG TÁC TUẦN CỦA BAN GIÁM ĐỐC</p>
                 @php
                     $monday = \Carbon\Carbon::parse($selectedDateIso ?? now()->toDateString())->startOfWeek(\Carbon\Carbon::MONDAY);
                     $friday = $monday->copy()->addDays(4);
                 @endphp
-                <p style="color: #555; font-size: 20px;">(Từ ngày {{ $monday->format('d/m/Y') }} đến {{ $friday->format('d/m/Y') }}, lịch công tác có thể thay đổi)</p>
+                <p style="color: #555; font-size: 12px;">(Từ ngày {{ $monday->format('d/m/Y') }} đến {{ $friday->format('d/m/Y') }}, lịch công tác có thể thay đổi)</p>
             </div>
             <div class="schedule-table-wrap" style="overflow-x: auto; background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); height: 600px; font-size: 20px;">
                 <table class="schedule-table" style="width: 100%;height: 300px; border-collapse: collapse; font-family: 'Roboto', sans-serif; font-size: 14px;">
