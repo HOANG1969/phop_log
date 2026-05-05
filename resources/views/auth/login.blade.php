@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><img src="{{ asset('image/logopvgas.png') }}" alt="PVGAS Logo"> Đăng nhập hệ thống phòng họp2</title>
+    <title> Đăng nhập hệ thống phòng họp2</title>
     <link rel="stylesheet" href="{{ asset('css/meeting.css') }}">
 </head>
 <body>
