@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="{{ asset('images/logopvgas.png') }}?v=3">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logopvgas.png') }}?v=3">
     <title> Đăng nhập hệ thống phòng họp2</title>
     <link rel="stylesheet" href="{{ asset('css/meeting.css') }}">
 </head>
