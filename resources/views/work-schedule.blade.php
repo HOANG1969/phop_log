@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/logopvgas.png') }}?v=3">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logopvgas.png') }}?v=3">
     <title >Hệ thống quản lý Phòng họp, lịch công tác PVGAS LOGISITICS</title>
     <link rel="stylesheet" href="{{ asset('css/meeting.css') }}">
 </head>
