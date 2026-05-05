@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" type="image/png" href="{{ asset('image/logopvgas.png') }}?v=3">
-    <link rel="shortcut icon" type="image/png" href="{{ asset('image/logopvgas.png') }}?v=3">
+    <link rel="icon" type="image/png" href="{{ asset('images/logopvgas.png') }}?v=3">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logopvgas.png') }}?v=3">
     <title >Hệ thống quản lý Phòng họp, lịch công tác PVGAS LOGISITICS</title>
     <link rel="stylesheet" href="{{ asset('css/meeting.css') }}">
 </head>
@@ -14,11 +14,11 @@
         <div class="brand">
             <!-- <h4 class="brand-logo">PETROVIETNAM<br>PV GAS</h4> -->
              <img src="{{ asset('image/logopvgas.png') }}" alt="PVGAS LOGISTICS" style="height: 140px; margin-right: 12px;">
-            <h2 style="color: red;">HỆ THỐNG QUẢN LÝ PVGAS LOGISITICS</h2>
+            <h3 style="color: red;">HỆ THỐNG QUẢN LÝ PHÒNG HỌP, LỊCH CÔNG TÁC PVGAS LOGISITICS</h3>
         </div>
 
         <div class="nav-actions">
-            <a class="tab active" href="{{ route('schedule.index') }}" style="margin-right: 0px;">PHÒNG HỌP</a>
+            <a class="tab " href="{{ route('schedule.index') }}" style="margin-right: 0px;">PHÒNG HỌP</a>
             @if ($currentUser && $currentUser->isAdmin())
                 <a class="tab tab-with-badge" href="{{ route('admin.bookings.index') }}">
                     PHÊ DUYỆT
@@ -28,12 +28,12 @@
                 </a>
                 <a class="tab" href="{{ route('admin.users.index') }}">NHÂN SỰ</a>
                 <a class="tab" href="{{ route('admin.rooms.index') }}">DANH SÁCH PHÒNG</a>
-                <a class="tab" href="{{ route('admin.schedule.work-schedule') }}" style="border-radius: 6px; margin-right: 0px;">LỊCH CÔNG TÁC BGĐ</a>
+                <a class="tab " href="{{ route('admin.schedule.work-schedule') }}" style="border-radius: 6px; margin-right: 0px;">LỊCH CÔNG TÁC BGĐ</a>
             @else
                 <h5>|</h5>
                 <a class="tab" href="{{ route('schedule.my-bookings') }}" style="border-radius: 6px; margin-left: 0px;">LỊCH CỦA TÔI</a>
                 <h4>|</h4>
-                <a class="tab" href="{{ route('schedule.work-schedule') }}" style="border-radius: 6px; margin-right: 0px;">LỊCH CÔNG TÁC BGĐ</a>
+                <a class="tab active " href="{{ route('schedule.work-schedule') }}" style="border-radius: 6px; margin-right: 0px;">LỊCH CÔNG TÁC BGĐ</a>
             @endif
             <!-- <button class="icon-btn" type="button" aria-label="Trợ giúp">?</button> -->
             <!-- <button class="icon-btn" type="button" aria-label="Thông báo">
@@ -101,7 +101,7 @@
             </div>
 
             
-            <div style="text-align: center; margin-bottom: 16px; font-weight: bold; color: #555; font-size: 24px;">
+            <div style="text-align: center; margin-bottom: 16px; font-weight: bold; color: #555; font-size: 20px;">
                 <p>DỰ KIẾN LỊCH CÔNG TÁC TUẦN CỦA BAN GIÁM ĐỐC</p>
                 @php
                     $monday = \Carbon\Carbon::parse($selectedDateIso ?? now()->toDateString())->startOfWeek(\Carbon\Carbon::MONDAY);

@@ -13,7 +13,7 @@
     <header class="topbar" style="width: 100%; height: 100px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 2px 4px rgba(233, 221, 221, 0.86); background-color: #d7ecfa;">
         <div class="brand">
             <img src="{{ asset('image/logopvgas.png') }}" alt="PVGAS LOGISTICS" style="height: 140px; margin-right: 12px;">
-            <h2 style="color: red;">HỆ THỐNG QUẢN LÝ PHÒNG HỌP PVGAS LOGISITICS</h2>
+            <h3 style="color: red;">HỆ THỐNG QUẢN LÝ PHÒNG HỌP, LỊCH CÔNG TÁC PVGAS LOGISITICS</h3>
         </div>
 
         <div class="nav-actions">
@@ -31,15 +31,18 @@
                 <h5>|</h5>
                 <a class="tab active" href="{{ route('schedule.my-bookings') }}" style="border-radius: 6px; margin-left: 0px;">LỊCH CỦA TÔI</a>
                 <h4>|</h4>
-                <button class="tab" type="button" style="border-radius: 6px; margin-right: 0px;">THỐNG KÊ</button>
+                <!-- <button class="tab" type="button" style="border-radius: 6px; margin-right: 0px;">THỐNG KÊ</button> -->
+                 <a class="tab" href="{{ route('schedule.work-schedule') }}" style="border-radius: 6px; margin-right: 0px;">LỊCH CÔNG TÁC BGĐ</a>
+                 <!-- <a class="tab active" href="{{ route('schedule.my-bookings') }}" style="border-radius: 6px; margin-left: 0px;">LỊCH CỦA TÔI</a> -->
             @endif
-            <div class="user-pill">
+            <!-- <div class="user-pill">
                 <span class="avatar"></span>
                 {{ $currentUser?->name ?? 'Người dùng' }}
-            </div>
+            </div> -->
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button class="tab" type="submit">ĐĂNG XUẤT</button>
+                <!-- <button class="tab" type="submit">ĐĂNG XUẤT</button> -->
+                 <button class="tab" type="submit" style="background-color: blue; color: white; border-radius: 6px; margin-right: 0px;">ĐĂNG XUẤT</button>
             </form>
         </div>
     </header>
@@ -64,7 +67,7 @@
         <section class="admin-wrap">
             <div class="row-flex" style="justify-content: space-between; margin-bottom: 12px;">
                 <h2 class="admin-title" style="margin: 0;">Lịch sử đăng ký của tôi</h2>
-                <a class="tab" href="{{ route('schedule.index') }}"> << Quay lại</a>
+                <a class="tab" href="{{ route('schedule.index') }}"> Quay lại</a>
             </div>
 
             @if (! $databaseReady)

@@ -14,7 +14,7 @@
         <div class="brand">
             <!-- <h4 class="brand-logo">PETROVIETNAM<br>PV GAS</h4> -->
              <img src="{{ asset('image/logopvgas.png') }}" alt="PVGAS LOGISTICS" style="height: 140px; margin-right: 12px;">
-            <h2 style="color: red;">HỆ THỐNG QUẢN LÝ PVGAS LOGISITICS</h2>
+            <h3 style="color: red;">HỆ THỐNG QUẢN LÝ PHÒNG HỌP, LỊCH CÔNG TÁC PVGAS LOGISITICS</h3>
         </div>
 
         <div class="nav-actions">
