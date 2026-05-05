@@ -26,12 +26,12 @@
                 </a>
                 <a class="tab" href="{{ route('admin.users.index') }}">NHÂN SỰ</a>
                 <a class="tab" href="{{ route('admin.rooms.index') }}">DANH SÁCH PHÒNG</a>
-                <a class="tab" href="{{ route('schedule.work-schedule') }}" style="border-radius: 6px; margin-right: 0px;">LỊCH CÔNG TÁC</a>
+                <a class="tab" href="{{ route('schedule.work-schedule') }}" style="border-radius: 6px; margin-right: 0px;">LỊCH CÔNG TÁC BGĐ</a>
             @else
                 <h5>|</h5>
                 <a class="tab" href="{{ route('schedule.my-bookings') }}" style="border-radius: 6px; margin-left: 0px;">LỊCH CỦA TÔI</a>
                 <h4>|</h4>
-                <a class="tab" href="{{ route('schedule.work-schedule') }}" style="border-radius: 6px; margin-right: 0px;">LỊCH CÔNG TÁC BGĐ</a>
+                <a class="tab" href="{{ route('schedule.work-schedule') }}" style="border-radius: 6px; margin-right: 0px;">LỊCH CÔNG TÁC BGD</a>
             @endif
             <!-- <button class="icon-btn" type="button" aria-label="Trợ giúp">?</button> -->
             <!-- <button class="icon-btn" type="button" aria-label="Thông báo">
