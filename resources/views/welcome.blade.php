@@ -10,11 +10,11 @@
     <link rel="stylesheet" href="{{ asset('css/meeting.css') }}">
 </head>
 <body>
-    <header class="topbar" id="scheduleHeader" style="width: 100%; height: 100px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 2px 4px rgba(233, 221, 221, 0.86); background-color: #d7ecfa;">
+    <header class="topbar app-topbar" id="scheduleHeader">
         <div class="brand">
             <!-- <h4 class="brand-logo">PETROVIETNAM<br>PV GAS</h4> -->
-             <img src="{{ asset('image/logopvgas.png') }}" alt="PVGAS LOGISTICS" style="height: 140px; margin-right: 12px;">
-            <h3 style="color: red;">HỆ THỐNG QUẢN LÝ PHÒNG HỌP, LỊCH CÔNG TÁC PVGAS LOGISITICS</h3>
+             <img src="{{ asset('image/logopvgas.png') }}" alt="PVGAS LOGISTICS" class="brand-logo-image">
+            <h3 class="brand-heading"> PVGAS LOGISITICS</h3>
         </div>
 
         <div class="nav-actions">

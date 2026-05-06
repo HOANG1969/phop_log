@@ -34,10 +34,34 @@ body {
     border-bottom: 1px solid #d7dfe9;
 }
 
+.app-topbar {
+    width: 100%;
+    min-height: 68px;
+    height: auto;
+    padding: 10px 24px;
+    background-color: #d7ecfa;
+    box-shadow: 0 2px 4px rgba(233, 221, 221, 0.86);
+}
+
 .brand {
     display: flex;
     align-items: center;
     gap: 10px;
+    min-width: 0;
+}
+
+.brand-logo-image {
+    height: clamp(64px, 9vw, 110px);
+    width: auto;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.brand-heading {
+    margin: 0;
+    color: #c81414;
+    font-size: clamp(18px, 2.1vw, 28px);
+    line-height: 1.25;
 }
 
 .brand-logo {
@@ -65,6 +89,8 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
 }
 
 .tab {
@@ -532,6 +558,12 @@ body {
     color: #1f3f5b;
 }
 
+.login-form-wrap h1 {
+    margin: 0 0 16px;
+    font-size: 28px;
+    color: #0f0ce7;
+}
+
 .login-remember {
     font-size: 14px;
     color: #2f4661;
@@ -565,8 +597,11 @@ body {
 }
 
 .login-submit {
-    height: 40px;
-    font-size: 15px;
+    height: 44px;
+    width: min(220px, 100%);
+    margin-top: 16px;
+    border-radius: 10px;
+    font-size: 18px;
     font-weight: 700;
 }
 
@@ -784,6 +819,13 @@ body {
 
 @media (max-width: 980px) {
     .brand-title { font-size: 23px; }
+    .topbar.app-topbar {
+        padding: 10px 14px;
+    }
+    .nav-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
     .f-row { grid-template-columns: 1fr; }
     .f-label { line-height: 1.2; }
     .f-inline { grid-template-columns: 1fr 1fr; }
@@ -805,6 +847,24 @@ body {
     }
 
     .brand-title { font-size: 18px; }
+    .brand {
+        width: 100%;
+    }
+    .brand-logo-image {
+        height: 64px;
+        margin-right: 8px;
+    }
+    .brand-heading {
+        font-size: 18px;
+    }
+    .nav-actions {
+        width: 100%;
+        gap: 8px;
+    }
+    .tab {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
     .toolbar { flex-wrap: wrap; }
     .zoom-btn {
         margin-left: 0;
@@ -826,5 +886,9 @@ body {
 
     .login-brand h1 {
         font-size: 24px;
+    }
+
+    .login-submit {
+        width: 100%;
     }
 }

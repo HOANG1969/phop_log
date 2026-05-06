@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" type="image/png" href="{{ asset('images/logopvgas.png') }}?v=3">
-    <link rel="shortcut icon" type="image/png" href="{{ asset('images/logopvgas.png') }}?v=3">
+    <link rel="icon" type="image/png" href="{{ asset('image/logopvgas.png') }}?v=3">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('image/logopvgas.png') }}?v=3">
     <title >Hệ thống quản lý Phòng họp, lịch công tác PVGAS LOGISITICS</title>
     <link rel="stylesheet" href="{{ asset('css/meeting.css') }}">
 </head>
 <body>
-    <header class="topbar" id="scheduleHeader" style="width: 100%; height: 100px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 2px 4px rgba(233, 221, 221, 0.86); background-color: #d7ecfa;">
+    <header class="topbar app-topbar" id="scheduleHeader">
         <div class="brand">
             <!-- <h4 class="brand-logo">PETROVIETNAM<br>PV GAS</h4> -->
-             <img src="{{ asset('image/logopvgas.png') }}" alt="PVGAS LOGISTICS" style="height: 140px; margin-right: 12px;">
-            <h3 style="color: red;">HỆ THỐNG QUẢN LÝ PHÒNG HỌP, LỊCH CÔNG TÁC PVGAS LOGISITICS</h3>
+             <img src="{{ asset('image/logopvgas.png') }}" alt="PVGAS LOGISTICS" class="brand-logo-image">
+            <h3 class="brand-heading">PVGAS LOGISITICS</h3>
         </div>
 
         <div class="nav-actions">
