@@ -62,7 +62,7 @@
                         <td>{{ $booking->room?->name }}</td>
                         <td>{{ $booking->title }}</td>
                         <td>{{ $booking->start_at?->format('d/m/Y H:i') }} - {{ $booking->end_at?->format('H:i') }}</td>
-                        <td>{{ $booking->requester?->name ?? 'N/A' }}</td>
+                        <td>{{ $booking->organizer_name ?? $booking->requester?->name ?? 'N/A' }}</td>
                         <td>{{ strtoupper($booking->status) }}</td>
                         <td>
                             @if ($booking->status === 'pending')

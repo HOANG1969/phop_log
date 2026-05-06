@@ -37,7 +37,7 @@ class UserManagementController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:80', 'unique:users,username'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'department' => ['nullable', 'string', 'max:120'],
+            'department' => ['required', 'in:KVP,KCTV'],
             'position' => ['nullable', 'string', 'max:120'],
             'role' => ['required', 'in:admin,user'],
             'is_active' => ['nullable', 'boolean'],
@@ -45,6 +45,7 @@ class UserManagementController extends Controller
         ]);
 
         $data['is_active'] = (bool) ($data['is_active'] ?? false);
+        $data['department'] = strtoupper((string) $data['department']);
         $data['password'] = Hash::make($data['password']);
 
         User::create($data);
@@ -58,7 +59,7 @@ class UserManagementController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:80', 'unique:users,username,' . $user->id],
             'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'department' => ['nullable', 'string', 'max:120'],
+            'department' => ['required', 'in:KVP,KCTV'],
             'position' => ['nullable', 'string', 'max:120'],
             'role' => ['required', 'in:admin,user'],
             'is_active' => ['nullable', 'boolean'],
@@ -66,6 +67,7 @@ class UserManagementController extends Controller
         ]);
 
         $data['is_active'] = (bool) ($data['is_active'] ?? false);
+        $data['department'] = strtoupper((string) $data['department']);
 
         if (! empty($data['password'])) {
             $data['password'] = Hash::make($data['password']);

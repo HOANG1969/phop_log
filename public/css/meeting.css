@@ -36,8 +36,8 @@ body {
 
 .app-topbar {
     width: 100%;
-    min-height: 68px;
-    height: auto;
+    min-height: 30px;
+    height: 90px;
     padding: 10px 24px;
     background-color: #d7ecfa;
     box-shadow: 0 2px 4px rgba(233, 221, 221, 0.86);
@@ -99,7 +99,7 @@ body {
     color: #2f4661;
     padding: 10px 14px;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: 10px;
     font-weight: 600;
     text-decoration: none;
     display: inline-flex;

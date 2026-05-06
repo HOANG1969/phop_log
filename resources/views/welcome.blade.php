@@ -212,6 +212,11 @@
                     </div>
 
                     <div class="f-row">
+                        <div class="f-label">Người đăng ký <span class="req">*</span></div>
+                        <input class="field" name="organizer_name" value="{{ old('organizer_name', $currentUser?->name) }}" placeholder="Nhập người đăng ký" required>
+                    </div>
+
+                    <div class="f-row">
                         <div class="f-label">Nội dung họp <span class="req">*</span></div>
                         <input class="field" name="title" value="{{ old('title') }}" placeholder="Nhập nội dung họp" required>
                     </div>

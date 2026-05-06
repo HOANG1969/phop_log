@@ -19,7 +19,9 @@ class MeetingScheduleController extends Controller
     {
         $user = $request->user();
         $selectedDate = $this->resolveDate($request->query('date')) ?? Carbon::today();
-        $selectedArea = strtoupper((string) $request->query('area', 'ALL'));
+        $defaultArea = $this->resolveUnitCode((string) ($user?->department ?? '')) ?? 'ALL';
+        $areaFromQuery = strtoupper(trim((string) $request->query('area', '')));
+        $selectedArea = $areaFromQuery !== '' ? $areaFromQuery : $defaultArea;
         $pendingApprovalCount = 0;
 
         $databaseReady = true;
@@ -36,6 +38,10 @@ class MeetingScheduleController extends Controller
             $areas = collect(['ALL'])->merge($areas);
             if ($areas->isEmpty()) {
                 $areas = collect(['ALL']);
+            }
+
+            if (! $areas->contains($selectedArea)) {
+                $selectedArea = $areas->contains($defaultArea) ? $defaultArea : 'ALL';
             }
 
             $roomsQuery = MeetingRoom::query()
@@ -344,6 +350,7 @@ class MeetingScheduleController extends Controller
     {
         $validated = $request->validate([
             'meeting_room_id' => ['required', 'integer', 'exists:meeting_rooms,id'],
+            'organizer_name' => ['required', 'string', 'max:255'],
             'title' => ['required', 'string', 'max:255'],
             'start_date' => ['required', 'string'],
             'start_time' => ['required', 'date_format:H:i'],
@@ -402,6 +409,7 @@ class MeetingScheduleController extends Controller
                 'meeting_room_id' => $validated['meeting_room_id'],
                 'requested_by' => Auth::id(),
                 'approved_by' => $isAdminBooking ? Auth::id() : null,
+                'organizer_name' => $validated['organizer_name'],
                 'title' => $validated['title'],
                 'start_at' => $startAt,
                 'end_at' => $effectiveEndAt,
@@ -413,7 +421,6 @@ class MeetingScheduleController extends Controller
                 'is_online' => (bool) ($validated['is_online'] ?? false),
                 'status' => $isAdminBooking ? 'approved' : 'pending',
                 'approved_at' => $isAdminBooking ? Carbon::now() : null,
-                'organizer_name' => Auth::user()->name,
             ]);
         } catch (QueryException $e) {
             return back()->withInput()->withErrors([
@@ -442,6 +449,16 @@ class MeetingScheduleController extends Controller
                 return null;
             }
         }
+    }
+
+    private function resolveUnitCode(string $department): ?string
+    {
+        $normalized = strtoupper(trim($department));
+
+        return match ($normalized) {
+            'KVP', 'KCTV' => $normalized,
+            default => null,
+        };
     }
 
     private function resolveNowLineMinutes(Carbon $selectedDate): ?int

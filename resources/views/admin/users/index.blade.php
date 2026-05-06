@@ -32,7 +32,7 @@
         @endif
 
         <form method="GET" action="{{ route('admin.users.index') }}" class="row-flex" style="margin-bottom: 12px;">
-            <input class="field" name="q" value="{{ $keyword }}" placeholder="Tìm tên, username, email, phòng ban...">
+            <input class="field" name="q" value="{{ $keyword }}" placeholder="Tìm tên, username, email, đơn vị...">
             <button class="btn" type="submit">Tìm</button>
         </form>
 
@@ -45,7 +45,11 @@
                     <input class="field" name="username" placeholder="Username" required>
                     <input class="field" name="email" type="email" placeholder="Email" required>
                     <input class="field" name="password" type="password" placeholder="Mật khẩu" required>
-                    <input class="field" name="department" placeholder="Phòng ban">
+                    <select class="field" name="department" required>
+                        <option value="" disabled selected>Chọn đơn vị</option>
+                        <option value="KVP">KVP</option>
+                        <option value="KCTV">KCTV</option>
+                    </select>
                     <input class="field" name="position" placeholder="Chức vụ">
                     <select class="field" name="role" required>
                         <option value="user">user</option>
@@ -64,7 +68,7 @@
                     <th>Họ tên</th>
                     <th>Username</th>
                     <th>Email</th>
-                    <th>Phòng ban</th>
+                    <th>Đơn vị</th>
                     <th>Vai trò</th>
                     <th>Trạng thái</th>
                     <th>Cập nhật</th>
@@ -89,7 +93,11 @@
                                     <input class="field" name="name" value="{{ $user->name }}" required>
                                     <input class="field" name="username" value="{{ $user->username }}" required>
                                     <input class="field" name="email" value="{{ $user->email }}" required>
-                                    <input class="field" name="department" value="{{ $user->department }}">
+                                    <select class="field" name="department" required>
+                                        <option value="" disabled @selected(empty($user->department))>Chọn đơn vị</option>
+                                        <option value="KVP" @selected(strtoupper((string) $user->department) === 'KVP')>KVP</option>
+                                        <option value="KCTV" @selected(strtoupper((string) $user->department) === 'KCTV')>KCTV</option>
+                                    </select>
                                     <input class="field" name="position" value="{{ $user->position }}">
                                     <select class="field" name="role">
                                         <option value="user" @selected($user->role === 'user')>user</option>
