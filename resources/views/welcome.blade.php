@@ -100,10 +100,10 @@
                 <div class="board" >
                     <div class="schedule">
                     <div class="grid-header" style="background-color: {{ $areaColors[$selectedArea] ?? '#e7e4e4' }};">
-                        <div class="cell" style="font-size: 20px; color: #000;">Danh sách phòng họp</div>
+                        <div class="cell" style="font-size: 16px; color: #000;">Danh sách phòng họp</div>
                          
                         @foreach ($hours as $hour)
-                            <div class="cell time" style="color: #5c0feb;">
+                            <div class="cell time" style="color: #5c0feb;font-size: 12px;"">
                                 @if ($hour < 12)
                                     {{ $hour }} AM
                                 @elseif ($hour === 12)
