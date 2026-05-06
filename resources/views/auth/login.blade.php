@@ -13,7 +13,7 @@
         <section class="login-shell" role="region" aria-label="Đăng nhập hệ thống">
             <div class="login-brand">
                 <img src="{{ asset('image/logopvgas.png') }}" alt="PVGAS Logo" class="login-logo">
-                <h1>PVGAS LOGISTICS</h1>
+                <h2 style="color: #f50606;">PVGAS LOGISTICS</h2>
                 <p style="color: #0f0ce7;font-size: 14px;">Hệ thống quản lý thông tin phòng họp</p>
                     <p style="color: #0f0ce7;font-size: 14px;">Lịch công tác Ban Giám đốc</p>
             </div>

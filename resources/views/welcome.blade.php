@@ -14,7 +14,7 @@
         <div class="brand">
             <!-- <h4 class="brand-logo">PETROVIETNAM<br>PV GAS</h4> -->
              <img src="{{ asset('image/logopvgas.png') }}" alt="PVGAS LOGISTICS" class="brand-logo-image">
-            <h3 class="brand-heading"> PVGAS LOGISITICS</h3>
+            <h4 class="brand-heading" style="font-size:20px;">PVGAS LOGISITICS</h4>
         </div>
 
         <div class="nav-actions">
