@@ -74,13 +74,13 @@
 
         <section class="schedule-viewport" id="scheduleViewport">
             <form class="toolbar" id="filterForm" method="GET" action="{{ route('schedule.index') }}" >
-                <div class="control date-box" style="display: flex; align-items: center; gap: 4px; width: max-content; height: 40px; padding: 0 8px; border: 1px solid #ccc; border-radius: 4px; font-family: Roboto, sans-serif;">
+                <div class="control date-box" style="display: flex; align-items: center; gap: 4px; width: max-content; height: 30px; padding: 0 8px; border: 1px solid #ccc; border-radius: 4px; font-family: Roboto, sans-serif;">
                     <button type="button" id="prevDate">&#9664;</button>
                     <input id="dateInput" name="date" type="date" value="{{ $selectedDateIso }}" autocomplete="off">
                     <button type="button" id="nextDate">&#9654;</button>
                 </div>
 
-                <div class="control area-box" style="width: 80px; height: 40px; display: flex; align-items: center; gap: 8px;">
+                <div class="control area-box" style="width: 80px; height: 30px; display: flex; align-items: center; gap: 8px;">
                     <select name="area" id="areaSelect">
                         @foreach ($areas as $area)
                             <option value="{{ $area }}" @selected($area === $selectedArea)>{{ $area === 'ALL' ? 'Tất cả' : $area }}</option>
