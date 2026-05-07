@@ -10,7 +10,7 @@
     --header-h: 68px;
     --left-col: 300px;
     --slot-w: 114px;
-    --slot-h: 82px;
+    --slot-h: 60px;
 }
 
 * {
@@ -388,7 +388,7 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 17px;
+    font-size: 14px;
 }
 
 .capacity {

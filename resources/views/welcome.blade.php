@@ -97,13 +97,12 @@
                     <div class="timeline-now" style="--left-minutes: {{ $nowLineMinutes }};"></div>
                 @endif
 
-                <div class="board" >
-                    <div class="schedule">
-                    <div class="grid-header" style="background-color: {{ $areaColors[$selectedArea] ?? '#e7e4e4' }};">
+                <div class="board" style="height: 500px;">
+                    <!-- <div class="schedule"> -->
+                    <div class="grid-header" style="background-color: {{ $areaColors[$selectedArea] ?? '#e7e4e4' }}; height: 60px; ">
                         <div class="cell" style="font-size: 16px; color: #000;">Danh sách phòng họp</div>
-                         
                         @foreach ($hours as $hour)
-                            <div class="cell time" style="color: #5c0feb;font-size: 12px;"">
+                            <div class="cell time" style="color: #5c0feb;font-size: 12px;">
                                 @if ($hour < 12)
                                     {{ $hour }} AM
                                 @elseif ($hour === 12)
@@ -115,12 +114,16 @@
                         @endforeach
                     </div>
 
+
+                
                     @foreach ($rooms as $room)
+                       
                         @php
                             $roomId = data_get($room, 'id');
                             $roomBookings = $bookingsByRoom[$roomId] ?? [];
                         @endphp
-                        <div class="grid-row" data-room-id="{{ $roomId }}" style="position: relative;">
+                
+                        <div class="grid-row" data-room-id="{{ $roomId }}" style="position: relative; font-size: 12px;">
                             <div class="cell">
                                 <div class="room-head" style="width: 100%;">
                                     <div class="room-head-left">
@@ -162,8 +165,9 @@
                                 </div>
                             @endforeach
                         </div>
+                    
                     @endforeach
-                    </div>
+                
                 </div>
             </section>
         </section>
