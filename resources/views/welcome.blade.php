@@ -18,7 +18,7 @@
         </div>
 
         <div class="nav-actions">
-            <a class="tab active" href="{{ route('schedule.index') }}" style="margin-right: 0px;">PHÒNG HỌP</a>
+            <a class="tab active" href="{{ route('schedule.index') }}" style="margin-right: 0px;">PHÒNG HỌP2</a>
             @if ($currentUser && $currentUser->isAdmin())
                 <a class="tab tab-with-badge" href="{{ route('admin.bookings.index') }}">
                     PHÊ DUYỆT
