@@ -37,7 +37,7 @@ body {
 .app-topbar {
     width: 100%;
     min-height: 30px;
-    height: 90px;
+    height: 80px;
     padding: 10px 24px;
     background-color: #d7ecfa;
     box-shadow: 0 2px 4px rgba(233, 221, 221, 0.86);
@@ -51,7 +51,7 @@ body {
 }
 
 .brand-logo-image {
-    height: clamp(64px, 9vw, 110px);
+    height: clamp(60px, 9vw, 90px);
     width: auto;
     margin-right: 12px;
     flex-shrink: 0;
