@@ -10,7 +10,7 @@
 </head>
 <body>
     <main class="login-page" style="background-image: url('{{ asset('image/background.jpg') }}'); background-size: cover; background-position: center;  display: flex; align-items: center; justify-content: center;">
-        <section class="login-shell" role="region" aria-label="Đăng nhập hệ thống">
+        <section class="login-shell" style="width: 650px;"role="region" aria-label="Đăng nhập hệ thống">
             <div class="login-brand">
                 <img src="{{ asset('image/logopvgas.png') }}" alt="PVGAS Logo" class="login-logo">
                 <h2 style="color: #f50606;">PVGAS LOGISTICS</h2>
@@ -51,7 +51,7 @@
                         <input type="checkbox" name="remember" value="1">
                         <span>Ghi nhớ đăng nhập</span>
                     </label>
-                    <button class="btn btn-primary login-submit" type="submit" style="margin-left: 80px;">ĐĂNG NHẬP</button>
+                    <button class="btn btn-primary login-submit" type="submit" style="margin-left: 50px;">ĐĂNG NHẬP</button>
                 </form>
 
                 
