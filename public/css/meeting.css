@@ -9,8 +9,8 @@
     --meeting-border: #2f7fff;
     --header-h: 68px;
     --left-col: 300px;
-    --slot-w: 130px;
-    --slot-h: 20px;
+    --slot-w: 200px;
+    --slot-h: 50px;
 }
 
 * {
