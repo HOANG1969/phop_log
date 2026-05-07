@@ -18,7 +18,7 @@
         </div>
 
         <div class="nav-actions">
-            <a class="tab active" href="{{ route('schedule.index') }}" style="margin-right: 0px;">PHÒNG HỌP2</a>
+            <a class="tab active" href="{{ route('schedule.index') }}" style="margin-right: 0px;">PHÒNG HỌP</a>
             @if ($currentUser && $currentUser->isAdmin())
                 <a class="tab tab-with-badge" href="{{ route('admin.bookings.index') }}">
                     PHÊ DUYỆT
@@ -100,7 +100,7 @@
                 <div class="board" style="height: 500px;">
                     <!-- <div class="schedule"> -->
                     <div class="grid-header" style="background-color: {{ $areaColors[$selectedArea] ?? '#e7e4e4' }}; height: 60px; ">
-                        <div class="cell" style="font-size: 16px; color: #000;">Danh sách phòng họp</div>
+                        <div class="cell" style="font-size: 14px; color: #000;">Danh sách phòng họp</div>
                         @foreach ($hours as $hour)
                             <div class="cell time" style="color: #5c0feb;font-size: 12px;">
                                 @if ($hour < 12)
