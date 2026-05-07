@@ -281,7 +281,7 @@ body {
 }
 
 .board-legend {
-    margin-top: 500px;
+    margin-top: 250px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
