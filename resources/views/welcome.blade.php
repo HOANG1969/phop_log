@@ -80,7 +80,7 @@
                     <button type="button" id="nextDate">&#9654;</button>
                 </div>
 
-                <div class="control area-box" style="width: 80px; height: 30px; display: flex; align-items: center; gap: 8px;">
+                <div class="control area-box" style="width: 80px; height: 30px; display: flex; align-items: center; gap: 4px;">
                     <select name="area" id="areaSelect">
                         @foreach ($areas as $area)
                             <option value="{{ $area }}" @selected($area === $selectedArea)>{{ $area === 'ALL' ? 'Tất cả' : $area }}</option>
@@ -93,12 +93,12 @@
             </form>
 
             <section class="board-wrap">
-                @if (! is_null($nowLineMinutes))
-                    <div class="timeline-now" style="--left-minutes: {{ $nowLineMinutes }};"></div>
-                @endif
+                <div class="board" style="height: 750px; position: relative;">
+                    <div class="board-grid">
+                    @if (! is_null($nowLineMinutes))
+                        <div class="timeline-now" style="--left-minutes: {{ $nowLineMinutes }};"></div>
+                    @endif
 
-                <div class="board" style="height: 500px;">
-                    <!-- <div class="schedule"> -->
                     <div class="grid-header" style="background-color: {{ $areaColors[$selectedArea] ?? '#e7e4e4' }}; height: 50px; ">
                         <div class="cell" style="font-size: 14px; color: #000;">Danh sách phòng họp</div>
                         @foreach ($hours as $hour)
@@ -167,7 +167,27 @@
                         </div>
                     
                     @endforeach
-                
+
+                    </div>
+
+                    <div class="board-legend" aria-label="Chú thích trạng thái phòng họp">
+                        <span class="legend-item legend-online">
+                            <span class="legend-icon" aria-hidden="true">📹</span>
+                            <span>Cuộc họp trực tuyến</span>
+                        </span>
+                        <span class="legend-item legend-maintenance">
+                            <span class="legend-box" aria-hidden="true"></span>
+                            <span>Bảo trì</span>
+                        </span>
+                        <span class="legend-item legend-pending">
+                            <span class="legend-box" aria-hidden="true"></span>
+                            <span>Chờ duyệt</span>
+                        </span>
+                        <span class="legend-item legend-approved">
+                            <span class="legend-box" aria-hidden="true"></span>
+                            <span>Đã duyệt</span>
+                        </span>
+                    </div>
                 </div>
             </section>
         </section>
@@ -275,8 +295,8 @@
                     <div class="detail-label">Trạng thái</div><div id="detailStatus"></div>
                     <div class="detail-label">Người đăng ký</div><div id="detailOrganizer"></div>
                     <div class="detail-label">Tham dự nội bộ</div><div id="detailInternal"></div>
-                    <div class="detail-label">Tham dự bên ngoài</div><div id="detailExternal"></div>
-                    <div class="detail-label">Tài liệu</div><div id="detailLink"></div>
+                    <!-- <div class="detail-label">Tham dự bên ngoài</div><div id="detailExternal"></div>
+                    <div class="detail-label">Tài liệu</div><div id="detailLink"></div> -->
                     <div class="detail-label">Ghi chú</div><div id="detailNotes"></div>
                 </div>
                 <div id="cancelBookingWrap" style="margin-top: 16px; display: none;">
