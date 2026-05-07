@@ -99,7 +99,7 @@
 
                 <div class="board" style="height: 500px;">
                     <!-- <div class="schedule"> -->
-                    <div class="grid-header" style="background-color: {{ $areaColors[$selectedArea] ?? '#e7e4e4' }}; height: 60px; ">
+                    <div class="grid-header" style="background-color: {{ $areaColors[$selectedArea] ?? '#e7e4e4' }}; height: 40px; ">
                         <div class="cell" style="font-size: 14px; color: #000;">Danh sách phòng họp</div>
                         @foreach ($hours as $hour)
                             <div class="cell time" style="color: #5c0feb;font-size: 12px;">
