@@ -93,7 +93,7 @@
             </form>
 
             <section class="board-wrap">
-                <div class="board" style="height: 600px; position: relative;">
+                <div class="board" style="height: 700px; position: relative;">
                     <div class="board-grid">
                     @if (! is_null($nowLineMinutes))
                         <div class="timeline-now" style="--left-minutes: {{ $nowLineMinutes }};"></div>
