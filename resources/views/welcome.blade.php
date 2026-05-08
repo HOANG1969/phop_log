@@ -48,7 +48,8 @@
             </div>-->
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button class="tab" type="submit" style="background-color: blue; color: white; border-radius: 6px; margin-right: 0px;">ĐĂNG XUẤT</button>
+                <!-- <button class="tab" type="submit" style="background-color: blue; color: white; border-radius: 6px; margin-right: 0px;">ĐĂNG XUẤT</button> -->
+                 <button class="tab" type="submit" style="background-color: green; color: white; border-radius: 6px; margin-right: 0px;">ĐĂNG XUẤT</button>
             </form>
         </div>
     </header>
@@ -88,7 +89,7 @@
                     </select>
                 </div>
 
-                <button class="register-btn" id="openRegister" type="button" @disabled(! $databaseReady)>+ Đăng ký</button>
+                <button class="register-btn" id="openRegister" style="height: 30px; background-color: green; color: white; border-radius: 6px;" type="button" @disabled(! $databaseReady)>+ Đăng ký</button>
 
                 
                 <button class="zoom-btn" id="toggleScheduleZoom" type="button" aria-pressed="false">⛶</button>
