@@ -18,8 +18,8 @@
                     <p style="color: #0f0ce7;font-size: 14px;">Lịch công tác Ban Giám đốc</p>
             </div>
 
-            <div class="login-form-wrap" style="color: #0f0ce7; text-align: center;" >
-                <h2>ĐĂNG NHẬP</h2>
+            <div class="login-form-wrap" style="text-color: green; text-align: center;" >
+                <h2 style="color: green;">ĐĂNG NHẬP</h2>
 
                 @if ($errors->any())
                     <div class="notice danger">
