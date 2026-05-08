@@ -98,7 +98,7 @@
                                     <td>{{ $booking->start_at?->format('d/m/Y H:i') ?? '-' }}</td>
                                     <td>{{ $booking->end_at?->format('d/m/Y H:i') ?? '-' }}</td>
                                     <td>{{ $statusLabels[$booking->status] ?? ucfirst((string) $booking->status) }}</td>
-                                    <td>{{ $booking->created_at?->format('d/m/Y H:i') ?? '-' }}</td>
+                                    <td>{{ $booking->created_at?->copy()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') ?? '-' }}</td>
                                     <td>{{ $booking->approver?->name ?? '-' }}</td>
                                 </tr>
                             @endforeach

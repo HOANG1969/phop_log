@@ -149,7 +149,6 @@
 
                             @foreach ($roomBookings as $booking)
                                 <div class="meeting meeting-{{ $booking['status'] ?? 'approved' }}"
-                                    title="{{ $booking['title'] }}"
                                     data-title="{{ $booking['title'] }}"
                                     data-time="{{ $booking['time_label'] ?? '' }}"
                                     data-room="{{ $booking['room_name'] ?? data_get($room, 'name') }}"
@@ -197,7 +196,7 @@
    
 
     <div class="modal {{ $errors->any() ? 'open' : '' }}" id="registerModal">
-        <div class="dialog" role="dialog" aria-modal="true" aria-label="Đăng ký phòng họp">
+        <div class="dialog" role="dialog" aria-modal="true" aria-label="Đăng ký phòng họp" style="width: 800px;">
             <div class="dialog-head" style="font-size: 18px; font-weight: 500;">
                 <span>✎ Đăng ký</span>
                 <button class="dialog-close" id="closeRegister" type="button">✕</button>
