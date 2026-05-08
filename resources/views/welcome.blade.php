@@ -88,6 +88,8 @@
                     </select>
                 </div>
 
+                <button class="register-btn" id="openRegister" type="button" @disabled(! $databaseReady)>+ Đăng ký</button>
+
                 
                 <button class="zoom-btn" id="toggleScheduleZoom" type="button" aria-pressed="false">⛶</button>
             </form>
