@@ -196,7 +196,7 @@
 
     <div class="modal {{ $errors->any() ? 'open' : '' }}" id="registerModal">
         <div class="dialog" role="dialog" aria-modal="true" aria-label="Đăng ký phòng họp">
-            <div class="dialog-head">
+            <div class="dialog-head" style="font-size: 18px; font-weight: 500;">
                 <span>✎ Đăng ký</span>
                 <button class="dialog-close" id="closeRegister" type="button">✕</button>
             </div>
@@ -209,8 +209,8 @@
                     <div class="f-row">
                         <div class="f-label">Bắt đầu <span class="req">*</span></div>
                         <div class="f-inline">
-                            <input class="field" id="registerStartDate" type="date" name="start_date" value="{{ old('start_date', $selectedDateIso) }}" required>
-                            <input class="field" id="registerStartTime" type="time" name="start_time" value="{{ old('start_time', '12:00') }}" step="300" required>
+                            <input class="field"  id="registerStartDate" type="date" name="start_date" value="{{ old('start_date', $selectedDateIso) }}" required>
+                            <input class="field"  style="width: 125px; " id="registerStartTime" type="time" name="start_time" value="{{ old('start_time', '12:00') }}" step="300" required>
                             <input class="field" id="registerEndDate" type="date" name="end_date" value="{{ old('end_date', $selectedDateIso) }}" required>
                             <input class="field" id="registerEndTime" type="time" name="end_time" value="{{ old('end_time', '13:00') }}" step="300" required>
                         </div>
@@ -253,7 +253,7 @@
                         </label>
                     </div>
 
-                    <div class="f-row">
+                    <!-- <div class="f-row">
                         <div class="f-label">Người tham dự (Nội bộ)</div>
                         <input class="field" name="internal_attendees" value="{{ old('internal_attendees') }}" placeholder="Chọn người tham dự nội bộ">
                     </div>
@@ -271,7 +271,7 @@
                     <div class="f-row">
                         <div class="f-label">Ghi chú</div>
                         <textarea class="field textarea" name="notes" placeholder="Ghi chú thêm...">{{ old('notes') }}</textarea>
-                    </div>
+                    </div> -->
 
                     <div class="submit-wrap">
                         <button class="submit" type="submit" @disabled(! $databaseReady)>✎ ĐĂNG KÝ</button>
