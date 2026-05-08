@@ -51,7 +51,7 @@
                         <input type="checkbox" name="remember" value="1">
                         <span>Ghi nhớ đăng nhập</span>
                     </label>
-                    <button class="btn btn-primary login-submit" type="submit" style="margin-left: 55px; font-size: 14px; width: 150px;">ĐĂNG NHẬP</button>
+                    <button class="btn btn-primary login-submit" type="submit" style="margin-left: 55px; background-color: green; color: white; font-size: 14px; width: 150px;">ĐĂNG NHẬP</button>
                 </form>
 
                 
