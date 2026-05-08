@@ -161,7 +161,6 @@
                                     @endif
                                     style="--left-minutes: {{ $booking['left_minutes'] }}; --duration-minutes: {{ $booking['duration_minutes'] }}; font-size: 15px;">
                                     <span class="meeting-title">{{ $booking['title'] }}</span>
-                                    <span class="meeting-time" style="font-size: 10px;">{{ $booking['time_label'] ?? '' }}</span>
                                 </div>
                             @endforeach
                         </div>

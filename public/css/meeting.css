@@ -479,18 +479,12 @@ body {
     width: calc((var(--duration-minutes) * (var(--slot-w) / 60)) - 4px);
 }
 
-.meeting-title,
-.meeting-time {
-    white-space: normal;
-    word-break: break-word;
+.meeting-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     width: 100%;
     line-height: 1.2;
-}
-
-.meeting-time {
-    font-size: 11px;
-    color: #4e6780;
-    margin-top: 2px;
 }
 
 .meeting-pending {
