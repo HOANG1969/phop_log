@@ -19,7 +19,7 @@
             </div>
 
             <div class="login-form-wrap" style="text-color: green; text-align: center;" >
-                <h2 style="color: green;">ĐĂNG NHẬP</h2>
+                <span style="color: green; font-size: 30px; margin-bottom: 16px; display: inline-block; font-weight: 700;">ĐĂNG NHẬP</span>
 
                 @if ($errors->any())
                     <div class="notice danger">
@@ -51,7 +51,7 @@
                         <input type="checkbox" name="remember" value="1">
                         <span>Ghi nhớ đăng nhập</span>
                     </label>
-                    <button class="btn btn-primary login-submit" type="submit" style="margin-left: 55px; background-color: green; color: white; font-size: 14px; width: 150px;">ĐĂNG NHẬP</button>
+                    <button class="btn btn-primary login-submit" type="submit" style="margin-left: 75px; background-color: green; color: white; font-size: 12px; width: 110px;">ĐĂNG NHẬP</button>
                 </form>
 
                 

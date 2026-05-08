@@ -163,7 +163,7 @@
                                     data-cancel-url="{{ route('schedule.bookings.cancel', $booking['id']) }}"
                                     @endif
                                     style="--left-minutes: {{ $booking['left_minutes'] }}; --duration-minutes: {{ $booking['duration_minutes'] }}; font-size: 15px;">
-                                    <span class="meeting-title">{{ $booking['title'] }}</span>
+                                    <span class="meeting-title">@if (!empty($booking['is_online'])) 📹 @endif{{ $booking['title'] }}</span>
                                 </div>
                             @endforeach
                         </div>
@@ -239,7 +239,7 @@
 
                     <div class="f-row">
                         <div class="f-label">Người đăng ký <span class="req">*</span></div>
-                        <input class="field" name="organizer_name" value="{{ old('organizer_name', $currentUser?->name) }}" placeholder="Nhập người đăng ký" required>
+                        <input class="field" name="organizer_name" value="{{ old('organizer_name') }}" placeholder="Nhập người đăng ký" required>
                     </div>
 
                     <div class="f-row">

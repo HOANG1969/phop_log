@@ -507,6 +507,7 @@ class MeetingScheduleController extends Controller
                 'left_minutes' => $leftMinutes,
                 'duration_minutes' => $durationMinutes,
                 'status' => $booking->status,
+                'is_online' => (bool) $booking->is_online,
                 'time_label' => $booking->start_at->format('H:i') . ' - ' . $booking->end_at->format('H:i'),
                 'room_name' => $booking->room?->name,
                 'organizer_name' => $booking->organizer_name,
