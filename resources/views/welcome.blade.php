@@ -103,7 +103,7 @@
                     @endif
 
                     <div class="grid-header" style="background-color: {{ $areaColors[$selectedArea] ?? '#e7e4e4' }}; height: 50px; ">
-                        <div class="cell" style="font-size: 14px; color: #000;">Danh sách phòng họp CN Logistics</div>
+                        <div class="cell" style="font-size: 14px; color: #000;">Danh sách phòng họp </div>
                         @foreach ($hours as $hour)
                             <div class="cell time" style="color: #5c0feb;font-size: 12px;">
                                 @if ($hour < 12)
