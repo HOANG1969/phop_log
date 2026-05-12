@@ -13,7 +13,7 @@
     <header class="topbar app-topbar">
         <div class="brand">
             <img src="{{ asset('image/logopvgas.png') }}" alt="PVGAS LOGISTICS" class="brand-logo-image">
-            <h4 class="brand-heading" style="font-size:20px;"> PVGAS LOGISITICS</h4>
+            <h4 class="brand-heading" style="font-size:16px;"> PVGAS LOGISITICS</h4>
         </div>
 
         <div class="nav-actions">
@@ -86,6 +86,7 @@
                                 <th>Kết thúc</th>
                                 <th>Trạng thái</th>
                                 <th>Ngày đăng ký</th>
+                                <th>Người đăng ký</th>
                                 <th>Người duyệt</th>
                             </tr>
                         </thead>
@@ -99,6 +100,7 @@
                                     <td>{{ $booking->end_at?->format('d/m/Y H:i') ?? '-' }}</td>
                                     <td>{{ $statusLabels[$booking->status] ?? ucfirst((string) $booking->status) }}</td>
                                     <td>{{ $booking->created_at?->copy()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') ?? '-' }}</td>
+                                    <td>{{ $booking->people}}</td>
                                     <td>{{ $booking->approver?->name ?? '-' }}</td>
                                 </tr>
                             @endforeach

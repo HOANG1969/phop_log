@@ -14,7 +14,7 @@
         <div class="brand">
             <!-- <h4 class="brand-logo">PETROVIETNAM<br>PV GAS</h4> -->
              <img src="{{ asset('image/logopvgas.png') }}" alt="PVGAS LOGISTICS" class="brand-logo-image">
-            <h4 class="brand-heading" style="font-size:20px;">PVGAS LOGISITICS</h4>
+            <h4 class="brand-heading" style="font-size: 16px;">PVGAS LOGISITICS</h4>
         </div>
 
         <div class="nav-actions">
@@ -238,13 +238,15 @@
 
                     <div class="f-row">
                         <div class="f-label">Người đăng ký <span class="req">*</span></div>
-                        <select class="field" name="organizer_user_id" required>
-                            <option value="">Chọn người đăng ký</option>
-                            @foreach (($organizerUsers ?? collect()) as $organizerUser)
-                                <option value="{{ $organizerUser->id }}" @selected((string) old('organizer_user_id') === (string) $organizerUser->id)>
-                                    {{ $organizerUser->name }}{{ $organizerUser->zalo_user_id ? ' - OA linked' : ' - Chưa liên kết OA' }}
-                                </option>
-                            @endforeach
+                        <input class="field" name="organizer_name" value="{{ old('organizer_name', $currentUser?->name) }}" placeholder="Nhập đầy đủ họ tên" required>
+                    </div>
+
+                    <div class="f-row">
+                        <div class="f-label">Phòng ban <span class="req">*</span></div>
+                        <select class="field" name="organizer_department" required>
+                            <option value="" disabled @selected(! old('organizer_department'))>Chọn phòng ban</option>
+                            <option value="KVP" @selected(old('organizer_department', $currentUser?->department) === 'KVP')>KVP</option>
+                            <option value="KCTV" @selected(old('organizer_department', $currentUser?->department) === 'KCTV')>KCTV</option>
                         </select>
                     </div>
 

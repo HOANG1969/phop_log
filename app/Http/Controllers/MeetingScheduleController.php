@@ -69,11 +69,6 @@ class MeetingScheduleController extends Controller
                 $selectedArea = 'ALL';
             }
 
-            $organizerUsers = User::query()
-                ->where('is_active', true)
-                ->orderBy('name')
-                ->get(['id', 'name', 'phone', 'zalo_user_id']);
-
             $bookingsByRoom = $this->loadBookingsByRoom($rooms->pluck('id')->all(), $selectedDate, $user?->id, $user?->isAdmin() ?? false);
 
             if ($user?->isAdmin()) {
@@ -85,7 +80,6 @@ class MeetingScheduleController extends Controller
             $databaseReady = false;
             $areas = collect(['ALL']);
             $rooms = collect($this->fallbackRooms());
-            $organizerUsers = collect();
             $bookingsByRoom = $this->fallbackBookingsByRoom();
         }
 
@@ -96,7 +90,6 @@ class MeetingScheduleController extends Controller
             'selectedArea' => $selectedArea,
             'areas' => $areas,
             'rooms' => $rooms,
-            'organizerUsers' => $organizerUsers,
             'bookingsByRoom' => $bookingsByRoom,
             'hours' => range(8, 17),
             'nowLineMinutes' => $this->resolveNowLineMinutes($selectedDate),
@@ -360,7 +353,8 @@ class MeetingScheduleController extends Controller
     {
         $validated = $request->validate([
             'meeting_room_id' => ['required', 'integer', 'exists:meeting_rooms,id'],
-            'organizer_user_id' => ['required', 'integer', 'exists:users,id'],
+            'organizer_name' => ['required', 'string', 'max:255'],
+            'organizer_department' => ['required', 'in:KVP,KCTV'],
             'title' => ['required', 'string', 'max:255'],
             'start_date' => ['required', 'string'],
             'start_time' => ['required', 'date_format:H:i'],
@@ -413,30 +407,14 @@ class MeetingScheduleController extends Controller
                 ]);
             }
 
-            $organizerUser = User::query()
-                ->where('id', $validated['organizer_user_id'])
-                ->where('is_active', true)
-                ->first();
-
-            if (! $organizerUser) {
-                return back()->withInput()->withErrors([
-                    'organizer_user_id' => 'Người đăng ký không hợp lệ hoặc đã bị khóa.',
-                ]);
-            }
-
-            if (! is_string($organizerUser->zalo_user_id) || trim($organizerUser->zalo_user_id) === '') {
-                return back()->withInput()->withErrors([
-                    'organizer_user_id' => 'Người đăng ký chưa có Zalo User ID để gửi thông báo qua OA.',
-                ]);
-            }
-
             $isAdminBooking = Auth::user()?->isAdmin() ?? false;
 
             $booking = MeetingBooking::create([
                 'meeting_room_id' => $validated['meeting_room_id'],
-                'requested_by' => $organizerUser->id,
+                'requested_by' => Auth::id(),
                 'approved_by' => $isAdminBooking ? Auth::id() : null,
-                'organizer_name' => $organizerUser->name,
+                'organizer_name' => $validated['organizer_name'],
+                'organizer_department' => strtoupper($validated['organizer_department']),
                 'title' => $validated['title'],
                 'start_at' => $startAt,
                 'end_at' => $effectiveEndAt,
@@ -450,7 +428,9 @@ class MeetingScheduleController extends Controller
                 'approved_at' => $isAdminBooking ? Carbon::now() : null,
             ]);
 
-            $this->sendZaloBookingNotifications($booking, $organizerUser);
+            if ($booking->status === 'pending') {
+                $this->sendZaloBookingNotifications($booking);
+            }
         } catch (QueryException $e) {
             return back()->withInput()->withErrors([
                 'meeting_room_id' => 'Không thể lưu vì chưa kết nối được database. Vui lòng cấu hình DB rồi thử lại.',
@@ -490,7 +470,7 @@ class MeetingScheduleController extends Controller
         };
     }
 
-    private function sendZaloBookingNotifications(MeetingBooking $booking, User $organizerUser): void
+    private function sendZaloBookingNotifications(MeetingBooking $booking): void
     {
         $zaloOaService = app(ZaloOaService::class);
         $roomName = $booking->room?->name ?? '-';
@@ -511,8 +491,7 @@ class MeetingScheduleController extends Controller
             ->whereNotNull('zalo_user_id')
             ->get(['name', 'zalo_user_id']);
 
-        $recipientUserIds = collect([$organizerUser->zalo_user_id])
-            ->merge($approvers->pluck('zalo_user_id'))
+        $recipientUserIds = $approvers->pluck('zalo_user_id')
             ->filter(fn ($userId) => is_string($userId) && trim($userId) !== '')
             ->unique()
             ->values();
