@@ -23,6 +23,10 @@
             <div class="notice success">{{ session('success') }}</div>
         @endif
 
+        @if (session('error'))
+            <div class="notice danger">{{ session('error') }}</div>
+        @endif
+
         @if ($errors->any())
             <div class="notice danger">
                 @foreach ($errors->all() as $error)
@@ -32,7 +36,7 @@
         @endif
 
         <form method="GET" action="{{ route('admin.users.index') }}" class="row-flex" style="margin-bottom: 12px;">
-            <input class="field" name="q" value="{{ $keyword }}" placeholder="Tìm tên, username, email, đơn vị...">
+            <input class="field" name="q" value="{{ $keyword }}" placeholder="Tìm tên, username, email, số điện thoại, Zalo User ID, đơn vị...">
             <button class="btn" type="submit">Tìm</button>
         </form>
 
@@ -44,6 +48,8 @@
                     <input class="field" name="name" placeholder="Họ tên" required>
                     <input class="field" name="username" placeholder="Username" required>
                     <input class="field" name="email" type="email" placeholder="Email" required>
+                    <input class="field" name="phone" placeholder="Số điện thoại (zalo)">
+                    <input class="field" name="zalo_user_id" placeholder="Zalo User ID (OA)">
                     <input class="field" name="password" type="password" placeholder="Mật khẩu" required>
                     <select class="field" name="department" required>
                         <option value="" disabled selected>Chọn đơn vị</option>
@@ -68,6 +74,8 @@
                     <th>Họ tên</th>
                     <th>Username</th>
                     <th>Email</th>
+                    <th>Số điện thoại</th>
+                    <th>Zalo User ID</th>
                     <th>Đơn vị</th>
                     <th>Vai trò</th>
                     <th>Trạng thái</th>
@@ -81,18 +89,23 @@
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->username }}</td>
                         <td>{{ $user->email }}</td>
+                        <td>{{ $user->phone ?? '-' }}</td>
+                        <td>{{ $user->zalo_user_id ?? '-' }}</td>
                         <td>{{ $user->department }}</td>
                         <td>{{ $user->role }}</td>
                         <td>{{ $user->is_active ? 'Hoạt động' : 'Khóa' }}</td>
                         <td>
-                            <details>
-                                <summary>Sửa</summary>
+                            <div class="row-flex" style="gap:4px; flex-wrap:wrap;">
+                                <details>
+                                    <summary>Sửa</summary>
                                 <form method="POST" action="{{ route('admin.users.update', $user) }}" class="stack" style="margin-top: 8px; min-width: 320px;">
                                     @csrf
                                     @method('PUT')
                                     <input class="field" name="name" value="{{ $user->name }}" required>
                                     <input class="field" name="username" value="{{ $user->username }}" required>
                                     <input class="field" name="email" value="{{ $user->email }}" required>
+                                    <input class="field" name="phone" value="{{ $user->phone }}" placeholder="Số điện thoại (zalo)">
+                                    <input class="field" name="zalo_user_id" value="{{ $user->zalo_user_id }}" placeholder="Zalo User ID (OA)">
                                     <select class="field" name="department" required>
                                         <option value="" disabled @selected(empty($user->department))>Chọn đơn vị</option>
                                         <option value="KVP" @selected(strtoupper((string) $user->department) === 'KVP')>KVP</option>
@@ -108,10 +121,17 @@
                                     <button class="btn" type="submit">Lưu</button>
                                 </form>
                             </details>
+                            @if ($user->zalo_user_id)
+                                <form method="POST" action="{{ route('admin.users.test-zalo', $user) }}" style="display:inline;">
+                                    @csrf
+                                    <button class="btn" type="submit" style="background:#0068ff;color:#fff;" onclick="return confirm('Gửi tin nhắn thử Zalo OA cho {{ $user->name }}?')">Test OA</button>
+                                </form>
+                            @endif
+                            </div>
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="8">Chưa có dữ liệu người dùng</td></tr>
+                    <tr><td colspan="10">Chưa có dữ liệu người dùng</td></tr>
                 @endforelse
             </tbody>
         </table>

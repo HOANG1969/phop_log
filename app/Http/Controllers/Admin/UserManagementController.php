@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\ZaloOaService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -21,6 +22,8 @@ class UserManagementController extends Controller
                     $sub->where('name', 'like', "%{$keyword}%")
                         ->orWhere('email', 'like', "%{$keyword}%")
                         ->orWhere('username', 'like', "%{$keyword}%")
+                        ->orWhere('phone', 'like', "%{$keyword}%")
+                        ->orWhere('zalo_user_id', 'like', "%{$keyword}%")
                         ->orWhere('department', 'like', "%{$keyword}%");
                 });
             })
@@ -37,6 +40,8 @@ class UserManagementController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:80', 'unique:users,username'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'zalo_user_id' => ['nullable', 'string', 'max:100'],
             'department' => ['required', 'in:KVP,KCTV'],
             'position' => ['nullable', 'string', 'max:120'],
             'role' => ['required', 'in:admin,user'],
@@ -59,6 +64,8 @@ class UserManagementController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:80', 'unique:users,username,' . $user->id],
             'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'zalo_user_id' => ['nullable', 'string', 'max:100'],
             'department' => ['required', 'in:KVP,KCTV'],
             'position' => ['nullable', 'string', 'max:120'],
             'role' => ['required', 'in:admin,user'],
@@ -78,5 +85,29 @@ class UserManagementController extends Controller
         $user->update($data);
 
         return back()->with('success', 'Cập nhật tài khoản thành công.');
+    }
+
+    public function testZaloNotification(User $user, ZaloOaService $zaloOaService): RedirectResponse
+    {
+        if (empty($user->zalo_user_id)) {
+            return back()->with('error', "Nhân sự {$user->name} chưa có Zalo User ID.");
+        }
+
+        $bookingData = [
+            'app_name'       => config('app.name', 'PHOP LOG'),
+            'title'          => '[TEST] Kiểm tra kết nối Zalo OA',
+            'room_name'      => 'Phòng họp Demo',
+            'time_label'     => now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i'),
+            'organizer_name' => $user->name,
+            'status'         => 'pending',
+        ];
+
+        $success = $zaloOaService->sendBookingNotification($user->zalo_user_id, $bookingData);
+
+        if ($success) {
+            return back()->with('success', "Gửi thử Zalo OA thành công cho {$user->name}. Kiểm tra Zalo để xác nhận.");
+        }
+
+        return back()->with('error', "Gửi thử Zalo OA thất bại cho {$user->name}. Kiểm tra log Laravel để biết chi tiết.");
     }
 }

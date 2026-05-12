@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'zalo_oa' => [
+        'access_token' => env('ZALO_OA_ACCESS_TOKEN'),
+        'message_url' => env('ZALO_OA_MESSAGE_URL'),
+    ],
+
 ];

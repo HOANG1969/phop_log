@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'username',
         'email',
+        'phone',
+        'zalo_user_id',
         'department',
         'position',
         'role',

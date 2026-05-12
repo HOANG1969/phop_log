@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function (): void {
 		Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
 		Route::post('/users', [UserManagementController::class, 'store'])->name('users.store');
 		Route::put('/users/{user}', [UserManagementController::class, 'update'])->name('users.update');
+		Route::post('/users/{user}/test-zalo', [UserManagementController::class, 'testZaloNotification'])->name('users.test-zalo');
 
 		Route::get('/bookings', [BookingApprovalController::class, 'index'])->name('bookings.index');
 		Route::post('/bookings/{booking}/approve', [BookingApprovalController::class, 'approve'])->name('bookings.approve');

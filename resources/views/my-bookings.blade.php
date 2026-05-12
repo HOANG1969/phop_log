@@ -42,7 +42,7 @@
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <!-- <button class="tab" type="submit">ĐĂNG XUẤT</button> -->
-                 <button class="tab" type="submit" style="background-color: blue; color: white; border-radius: 6px; margin-right: 0px;">ĐĂNG XUẤT</button>
+                 <button class="tab" type="submit" style="background-color: green; color: white; border-radius: 6px; margin-right: 0px;">ĐĂNG XUẤT</button>
             </form>
         </div>
     </header>

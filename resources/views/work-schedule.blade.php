@@ -48,7 +48,7 @@
             </div>-->
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button class="tab" type="submit" style="background-color: blue; color: white; border-radius: 6px; margin-right: 0px;">ĐĂNG XUẤT</button>
+                <button class="tab" type="submit" style="background-color: green; color: white; border-radius: 6px; margin-right: 0px;">ĐĂNG XUẤT</button>
             </form>
         </div>
     </header>
@@ -84,7 +84,7 @@
             @endphp
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
                 <div style="display:flex;align-items:center;gap:6px;">
-                    <a href="{{ route($navRoute, ['date' => now()->toDateString()]) }}" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:#0066cc;color:white;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;">📅 Hôm nay</a>
+                    <a href="{{ route($navRoute, ['date' => now()->toDateString()]) }}" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:#0066cc;color:white;border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap; background-color: green">📅 Hôm nay</a>
                     <a href="{{ route($navRoute, ['date' => $prevMonday->toDateString()]) }}" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;background:white;border:1px solid #ddd;border-radius:6px;color:#333;text-decoration:none;font-size:18px;font-weight:600;">‹</a>
                     <div style="position:relative; background:#0066cc;color:white;border-radius:6px;font-size:13px;font-weight:600;">
                         <button type="button" id="weekPickerBtn" style="display:inline-flex;align-items:center;gap:10px;padding:7px 14px;background:white;border:1px solid #ddd;border-radius:6px;font-size:13px;font-weight:600;color:#333;cursor:pointer;min-width:220px;justify-content:space-between;">
@@ -114,6 +114,7 @@
                     <thead>
                         <!-- Header with dates -->
                         <tr style="background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%); color: white; height: 60px;">
+                        <!-- <tr style="background: #; color: white; height: 60px;"> -->
                             <th rowspan="2" style="padding: 12px; text-align: center; font-weight: 600; border: 1px solid #0052a3; width: 55px; vertical-align: middle;">STT</th>
                             <th rowspan="2" style="padding: 12px; text-align: center; font-weight: 600; border: 1px solid #0052a3; min-width: 160px; vertical-align: middle;">Họ & Tên</th>
                             
