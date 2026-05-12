@@ -13,7 +13,11 @@ class BookingApprovalController extends Controller
 {
     public function index(Request $request): View
     {
-        $status = (string) $request->query('status', 'pending');
+        $allowedStatuses = ['pending', 'approved', 'rejected', 'cancelled', 'all'];
+        $status = strtolower((string) $request->query('status', 'pending'));
+        if (! in_array($status, $allowedStatuses, true)) {
+            $status = 'pending';
+        }
 
         $bookings = MeetingBooking::query()
             ->with(['room', 'requester', 'approver'])

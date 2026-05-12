@@ -354,7 +354,7 @@ class MeetingScheduleController extends Controller
         $validated = $request->validate([
             'meeting_room_id' => ['required', 'integer', 'exists:meeting_rooms,id'],
             'organizer_name' => ['required', 'string', 'max:255'],
-            'organizer_department' => ['required', 'in:KVP,KCTV'],
+            'organizer_department' => ['required', 'string', 'max:120'],
             'title' => ['required', 'string', 'max:255'],
             'start_date' => ['required', 'string'],
             'start_time' => ['required', 'date_format:H:i'],
@@ -414,7 +414,7 @@ class MeetingScheduleController extends Controller
                 'requested_by' => Auth::id(),
                 'approved_by' => $isAdminBooking ? Auth::id() : null,
                 'organizer_name' => $validated['organizer_name'],
-                'organizer_department' => strtoupper($validated['organizer_department']),
+                'organizer_department' => trim($validated['organizer_department']),
                 'title' => $validated['title'],
                 'start_at' => $startAt,
                 'end_at' => $effectiveEndAt,
@@ -432,8 +432,23 @@ class MeetingScheduleController extends Controller
                 $this->sendZaloBookingNotifications($booking);
             }
         } catch (QueryException $e) {
+            $errorMessage = (string) $e->getMessage();
+            $normalizedError = strtolower($errorMessage);
+            $friendlyMessage = 'Không thể lưu lịch họp do lỗi dữ liệu. Vui lòng thử lại.';
+
+            if (str_contains($normalizedError, 'organizer_department') || str_contains($normalizedError, 'unknown column')) {
+                $friendlyMessage = 'Database chưa cập nhật cấu trúc mới. Vui lòng chạy migrate rồi thử lại.';
+            } elseif (str_contains($normalizedError, 'sqlstate[hy000] [2002]') || str_contains($normalizedError, 'connection refused')) {
+                $friendlyMessage = 'Không thể kết nối database. Vui lòng kiểm tra cấu hình DB rồi thử lại.';
+            }
+
+            Log::error('Failed to create meeting booking.', [
+                'sql_state' => $e->getCode(),
+                'error' => $errorMessage,
+            ]);
+
             return back()->withInput()->withErrors([
-                'meeting_room_id' => 'Không thể lưu vì chưa kết nối được database. Vui lòng cấu hình DB rồi thử lại.',
+                'meeting_room_id' => $friendlyMessage,
             ]);
         }
 

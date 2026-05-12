@@ -103,7 +103,7 @@
                     @endif
 
                     <div class="grid-header" style="background-color: {{ $areaColors[$selectedArea] ?? '#e7e4e4' }}; height: 50px; ">
-                        <div class="cell" style="font-size: 14px; color: #000;">Danh sách phòng họp</div>
+                        <div class="cell" style="font-size: 14px; color: #000;">Danh sách phòng họp CN Logistics</div>
                         @foreach ($hours as $hour)
                             <div class="cell time" style="color: #5c0feb;font-size: 12px;">
                                 @if ($hour < 12)
@@ -238,16 +238,11 @@
 
                     <div class="f-row">
                         <div class="f-label">Người đăng ký <span class="req">*</span></div>
-                        <input class="field" name="organizer_name" value="{{ old('organizer_name', $currentUser?->name) }}" placeholder="Nhập đầy đủ họ tên" required>
-                    </div>
-
-                    <div class="f-row">
-                        <div class="f-label">Phòng ban <span class="req">*</span></div>
-                        <select class="field" name="organizer_department" required>
-                            <option value="" disabled @selected(! old('organizer_department'))>Chọn phòng ban</option>
-                            <option value="KVP" @selected(old('organizer_department', $currentUser?->department) === 'KVP')>KVP</option>
-                            <option value="KCTV" @selected(old('organizer_department', $currentUser?->department) === 'KCTV')>KCTV</option>
-                        </select>
+                        <div class="f-inline" style="gap: 8px;">
+                            <input class="field" name="organizer_name" value="{{ old('organizer_name') }}" placeholder="Họ và tên" required style="flex:2; width: 300px;">
+                            <input class="field" name="organizer_department" value="{{ old('organizer_department') }}" placeholder="Phòng ban" required style="flex:1; width: 200px;">
+                            
+                        </div>
                     </div>
 
                     <div class="f-row">

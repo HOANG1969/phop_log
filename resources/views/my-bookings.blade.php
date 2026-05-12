@@ -87,7 +87,8 @@
                                 <th>Trạng thái</th>
                                 <th>Ngày đăng ký</th>
                                 <th>Người đăng ký</th>
-                                <th>Người duyệt</th>
+                                <th>Phòng ban</th>
+                                <!-- <th>Người duyệt</th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -100,8 +101,9 @@
                                     <td>{{ $booking->end_at?->format('d/m/Y H:i') ?? '-' }}</td>
                                     <td>{{ $statusLabels[$booking->status] ?? ucfirst((string) $booking->status) }}</td>
                                     <td>{{ $booking->created_at?->copy()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') ?? '-' }}</td>
-                                    <td>{{ $booking->people}}</td>
-                                    <td>{{ $booking->approver?->name ?? '-' }}</td>
+                                    <td>{{ $booking->organizer_name ?? '-' }}</td>
+                                    <td>{{ $booking->organizer_department ?? '-' }}</td>
+                                    <!-- <td>{{ $booking->approver?->name ?? '-' }}</td> -->
                                 </tr>
                             @endforeach
                         </tbody>
