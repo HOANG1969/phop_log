@@ -159,8 +159,8 @@
                                 </td>
                                 <td style="padding: 10px 12px; background: #f5f5f5; border: 1px solid #e0e0e0; min-width: 160px;">
                                     <div style="display:flex; align-items:center; gap:10px;">
-                                        <div style="width:38px;height:38px;border-radius:50%;background:#0066cc;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;">
-                                            <img src="{{ asset('image/staff/' . ($staff['id'] ?? 'default') . '.jpg') }}" alt="{{ $staff['name'] ?? 'Avatar' }}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                        <div style="width:72px;height:72px;border-radius:50%;background:#0066cc;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;">
+                                            <img src="{{ asset('image/staff/' . ($staff['id'] ?? 'default') . '.jpg') }}" alt="{{ $staff['name'] ?? 'Avatar' }}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:center 15%;image-rendering:auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="22" height="22" style="display:none;"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
                                         </div>
                                         @php
