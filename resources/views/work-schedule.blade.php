@@ -96,7 +96,7 @@
                     <a href="{{ route($navRoute, ['date' => $nextMonday->toDateString()]) }}" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;background:white;border:1px solid #ddd;border-radius:6px;color:#333;text-decoration:none;font-size:18px;font-weight:600;">›</a>
                 </div>
                 @if ($currentUser && $currentUser->isAdmin())
-                <button class="btn-primary" id="registerBtn" type="button" style="padding:8px 16px;background:#27ae60;color:white;border:none;border-radius:4px;cursor:pointer;font-size:14px;font-weight:600;">+ Thêm lịch công tác</button>
+                <button class="btn-primary" id="registerBtn" type="button" style="padding:8px 16px;background:#27ae60;color:white;border:none;border-radius:4px;cursor:pointer;font-size:14px;font-weight:600;">+ l</button>
                 @endif
             </div>
 
@@ -250,7 +250,7 @@
     <div class="modal" id="registerModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
         <div class="dialog" role="dialog" aria-modal="true" aria-label="Thêm lịch công tác" style="background: white; border-radius: 8px; box-shadow: 0 2px 16px rgba(0,0,0,0.15); max-width: 560px; width: 90%; max-height: 90vh; overflow-y: auto;">
             <div class="dialog-head" style="padding: 18px 24px; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #0066cc, #0052a3); border-radius: 8px 8px 0 0;">
-                <span style="font-size: 16px; font-weight: 600; color: white;">➕ Thêm lịch công tác</span>
+                <span style="font-size: 16px; font-weight: 600; color: white; background-color: green;">➕ Thêm lịch công tác</span>
                 <button class="dialog-close" id="closeRegister" type="button" style="background: none; border: none; font-size: 20px; cursor: pointer; color: white; line-height: 1;">✕</button>
             </div>
 
@@ -267,7 +267,7 @@
                     <div style="margin-bottom: 18px;">
                         <label style="font-weight: 600; margin-bottom: 6px; display: block; font-size: 14px;">Nhân viên <span style="color: #d9534f;">*</span></label>
                         <select name="staff_id" required style="width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
-                            <option value="">Chọn nhân viên</option>
+                            <option value="">Chọn lãnh đạo</option>
                             @foreach (($staffList ?? []) as $staff)
                                 <option value="{{ $staff['id'] }}">{{ $staff['name'] }}</option>
                             @endforeach
@@ -362,9 +362,9 @@
                     @method('PUT')
 
                     <div style="margin-bottom: 18px;">
-                        <label style="font-weight: 600; margin-bottom: 6px; display: block; font-size: 14px;">Nhân viên <span style="color: #d9534f;">*</span></label>
+                        <label style="font-weight: 600; margin-bottom: 6px; display: block; font-size: 14px;">Lãnh đạo <span style="color: #d9534f;">*</span></label>
                         <select name="staff_id" id="editStaffId" required style="width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
-                            <option value="">Chọn nhân viên</option>
+                            <option value="">Chọn lãnh đạo</option>
                             @foreach (($staffList ?? []) as $staff)
                                 <option value="{{ $staff['id'] }}">{{ $staff['name'] }}</option>
                             @endforeach

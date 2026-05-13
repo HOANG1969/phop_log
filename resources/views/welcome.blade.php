@@ -286,10 +286,10 @@
         </div>
     </div>
 
-    <div class="modal" id="bookingDetailModal">
-        <div class="dialog detail-dialog" role="dialog" aria-modal="true" aria-label="Chi tiết lịch họp">
-            <div class="dialog-head">
-                <span>Chi tiết lịch họp</span>
+    <div class="modal" id="bookingDetailModal" ">
+        <div class="dialog detail-dialog" role="dialog" aria-modal="true" aria-label="Chi tiết lịch họp" style="width: 400px; ">
+            <div class="dialog-head" style="background-color: green;">
+                <span style="font-size: 20px;">Chi tiết lịch họp</span>
                 <button class="dialog-close" id="closeBookingDetail" type="button">✕</button>
             </div>
             <div class="dialog-body">
@@ -299,10 +299,10 @@
                     <div class="detail-label">Phòng họp</div><div id="detailRoom"></div>
                     <div class="detail-label">Trạng thái</div><div id="detailStatus"></div>
                     <div class="detail-label">Người đăng ký</div><div id="detailOrganizer"></div>
-                    <div class="detail-label">Tham dự nội bộ</div><div id="detailInternal"></div>
+                    <!-- <div class="detail-label">Tham dự nội bộ</div><div id="detailInternal"></div> -->
                     <!-- <div class="detail-label">Tham dự bên ngoài</div><div id="detailExternal"></div>
                     <div class="detail-label">Tài liệu</div><div id="detailLink"></div> -->
-                    <div class="detail-label">Ghi chú</div><div id="detailNotes"></div>
+                    <!-- <div class="detail-label">Ghi chú</div><div id="detailNotes"></div> -->
                 </div>
                 <div id="cancelBookingWrap" style="margin-top: 16px; display: none;">
                     <form id="cancelBookingForm" method="POST">
