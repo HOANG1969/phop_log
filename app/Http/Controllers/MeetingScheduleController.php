@@ -588,7 +588,7 @@ class MeetingScheduleController extends Controller
             ->orderBy('start_at');
 
         if (! $isAdmin) {
-            $bookingsQuery->whereIn('status', ['Chờ duyệt', 'Đã duyệt']);
+            $bookingsQuery->whereIn('status', ['pending', 'approved']);
         }
 
         $bookings = $bookingsQuery->get();
