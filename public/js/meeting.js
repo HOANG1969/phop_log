@@ -287,7 +287,9 @@
             setText("detailTitle", item.dataset.title);
             setText("detailTime", item.dataset.time);
             setText("detailRoom", item.dataset.room);
-            setText("detailStatus", item.dataset.status);
+            // setText("detailStatus", item.dataset.status);
+            const readableStatus = statusMap[item.dataset.status] || item.dataset.status;
+            setText("detailStatus", readableStatus);
             setText("detailOrganizer", item.dataset.organizer);
             setText("detailInternal", item.dataset.internal);
             setText("detailExternal", item.dataset.external);
