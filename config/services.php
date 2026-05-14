@@ -38,6 +38,14 @@ return [
     'zalo_oa' => [
         'access_token' => env('ZALO_OA_ACCESS_TOKEN'),
         'message_url' => env('ZALO_OA_MESSAGE_URL'),
+        'webhook_token' => env('ZALO_OA_WEBHOOK_TOKEN'),
+    ],
+
+    'zalo_zns' => [
+        'access_token' => env('ZALO_ZNS_ACCESS_TOKEN', env('ZALO_OA_ACCESS_TOKEN')),
+        'api_key' => env('ZALO_ZNS_API_KEY'),
+        'endpoint' => env('ZALO_ZNS_ENDPOINT', 'https://business.openapi.zalo.me/message/template'),
+        'template_id' => env('ZALO_ZNS_TEMPLATE_ID'),
     ],
 
 ];

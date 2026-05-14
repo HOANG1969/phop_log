@@ -5,7 +5,11 @@ use App\Http\Controllers\Admin\MeetingRoomManagementController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MeetingScheduleController;
+use App\Http\Controllers\Webhook\ZaloOaWebhookController;
 use Illuminate\Support\Facades\Route;
+
+Route::match(['GET', 'POST'], '/webhooks/zalo/oa', [ZaloOaWebhookController::class, 'handle'])
+	->name('webhooks.zalo.oa');
 
 Route::middleware('guest')->group(function (): void {
 	Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

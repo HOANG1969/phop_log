@@ -96,7 +96,7 @@
                     <a href="{{ route($navRoute, ['date' => $nextMonday->toDateString()]) }}" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;background:white;border:1px solid #ddd;border-radius:6px;color:#333;text-decoration:none;font-size:18px;font-weight:600;">›</a>
                 </div>
                 @if ($currentUser && $currentUser->isAdmin())
-                <button class="btn-primary" id="registerBtn" type="button" style="padding:8px 16px;background:#27ae60;color:white;border:none;border-radius:4px;cursor:pointer;font-size:14px;font-weight:600;">+ l</button>
+                <button class="btn-primary" id="registerBtn" type="button" style="padding:10px 18px;min-width:180px;background:#27ae60;color:white;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-weight:700;white-space:nowrap;">+ Thêm lịch công tác</button>
                 @endif
             </div>
 
@@ -250,7 +250,7 @@
     <div class="modal" id="registerModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
         <div class="dialog" role="dialog" aria-modal="true" aria-label="Thêm lịch công tác" style="background: white; border-radius: 8px; box-shadow: 0 2px 16px rgba(0,0,0,0.15); max-width: 560px; width: 90%; max-height: 90vh; overflow-y: auto;">
             <div class="dialog-head" style="padding: 18px 24px; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #0066cc, #0052a3); border-radius: 8px 8px 0 0;">
-                <span style="font-size: 16px; font-weight: 600; color: white; background-color: green;">➕ Thêm lịch công tác</span>
+                <span style="font-size: 16px; font-weight: 600; color: white; ">➕ Thêm lịch công tác</span>
                 <button class="dialog-close" id="closeRegister" type="button" style="background: none; border: none; font-size: 20px; cursor: pointer; color: white; line-height: 1;">✕</button>
             </div>
 
@@ -276,12 +276,12 @@
 
                     <div style="margin-bottom: 18px;">
                         <label style="font-weight: 600; margin-bottom: 6px; display: block; font-size: 14px;">Từ ngày <span style="color: #d9534f;">*</span></label>
-                        <input type="date" name="start_date" required style="width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;" value="{{ $selectedDateIso ?? now()->toDateString() }}">
+                        <input type="date" id="createStartDate" name="start_date" required style="width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;" value="{{ $selectedDateIso ?? now()->toDateString() }}">
                     </div>
 
                     <div style="margin-bottom: 18px;">
                         <label style="font-weight: 600; margin-bottom: 6px; display: block; font-size: 14px;">Đến ngày <span style="color: #d9534f;">*</span></label>
-                        <input type="date" name="end_date" required style="width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;" value="{{ $selectedDateIso ?? now()->toDateString() }}">
+                        <input type="date" id="createEndDate" name="end_date" required style="width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;" value="{{ $selectedDateIso ?? now()->toDateString() }}">
                     </div>
 
                     <div style="margin-bottom: 18px;">
@@ -427,6 +427,31 @@
         document.getElementById('closeEditModal')?.addEventListener('click', () => closeModal(editModal));
         document.getElementById('closeEditModalBtn')?.addEventListener('click', () => closeModal(editModal));
 
+        // Keep end_date always >= start_date for both create and edit forms.
+        function syncEndDateMin(startInput, endInput) {
+            if (!startInput || !endInput) return;
+
+            const startValue = startInput.value;
+            if (!startValue) return;
+
+            endInput.min = startValue;
+            if (endInput.value && endInput.value < startValue) {
+                endInput.value = startValue;
+            }
+        }
+
+        const createStartDate = document.getElementById('createStartDate');
+        const createEndDate = document.getElementById('createEndDate');
+
+        createStartDate?.addEventListener('change', () => syncEndDateMin(createStartDate, createEndDate));
+        syncEndDateMin(createStartDate, createEndDate);
+
+        const editStartDate = document.getElementById('editStartDate');
+        const editEndDate = document.getElementById('editEndDate');
+
+        editStartDate?.addEventListener('change', () => syncEndDateMin(editStartDate, editEndDate));
+        syncEndDateMin(editStartDate, editEndDate);
+
         [registerModal, bookingDetailModal, editModal].forEach(m => {
             m?.addEventListener('click', e => { if (e.target === m) closeModal(m); });
         });
@@ -478,6 +503,7 @@
 
             const endInput = document.getElementById('editEndDate');
             if (endInput) endInput.value = endDate || '';
+            syncEndDateMin(startInput, endInput);
 
             const periodMap = { morning: 'editPeriodMorning', afternoon: 'editPeriodAfternoon', both: 'editPeriodBoth' };
             const radioId = periodMap[originalPeriod];

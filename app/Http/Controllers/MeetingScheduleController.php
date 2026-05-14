@@ -7,6 +7,7 @@ use App\Models\MeetingRoom;
 use App\Models\User;
 use App\Models\WorkSchedule;
 use App\Services\ZaloOaService;
+use App\Services\ZaloZnsService;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
@@ -233,9 +234,11 @@ class MeetingScheduleController extends Controller
         $validated = $request->validate([
             'staff_id'   => ['required', 'integer', 'exists:users,id', Rule::in($staffIds)],
             'start_date' => ['required', 'date'],
-            'end_date'   => ['required', 'date', 'gte:start_date'],
+            'end_date'   => ['required', 'date', 'after_or_equal:start_date'],
             'period'     => ['required', 'in:morning,afternoon,both'],
             'activity'   => ['required', 'string', 'max:500'],
+        ], [
+            'end_date.after_or_equal' => 'Ngày "Đến ngày" phải bằng hoặc sau "Từ ngày".',
         ]);
 
         $conflictingPeriods = $validated['period'] === 'both'
@@ -281,9 +284,11 @@ class MeetingScheduleController extends Controller
         $validated = $request->validate([
             'staff_id'   => ['required', 'integer', 'exists:users,id', Rule::in($staffIds)],
             'start_date' => ['required', 'date'],
-            'end_date'   => ['required', 'date', 'gte:start_date'],
+            'end_date'   => ['required', 'date', 'after_or_equal:start_date'],
             'period'     => ['required', 'in:morning,afternoon,both'],
             'activity'   => ['required', 'string', 'max:500'],
+        ], [
+            'end_date.after_or_equal' => 'Ngày "Đến ngày" phải bằng hoặc sau "Từ ngày".',
         ]);
 
         $conflictingPeriods = $validated['period'] === 'both'
@@ -431,6 +436,8 @@ class MeetingScheduleController extends Controller
             if ($booking->status === 'pending') {
                 $this->sendZaloBookingNotifications($booking);
             }
+
+            $this->sendZnsBookingConfirmation($booking, Auth::user()?->phone);
         } catch (QueryException $e) {
             $errorMessage = (string) $e->getMessage();
             $normalizedError = strtolower($errorMessage);
@@ -519,6 +526,40 @@ class MeetingScheduleController extends Controller
                     'zalo_user_id' => $userId,
                 ]);
             }
+        }
+    }
+
+    private function sendZnsBookingConfirmation(MeetingBooking $booking, ?string $phone): void
+    {
+        if (! is_string($phone) || trim($phone) === '') {
+            return;
+        }
+
+        $znsService = app(ZaloZnsService::class);
+        $roomName = $booking->room?->name ?? '-';
+        $timeLabel = $booking->start_at?->format('d/m/Y H:i') . ' - ' . $booking->end_at?->format('H:i');
+
+        $templateData = [
+            'app_name' => config('app.name', 'PHOP LOG'),
+            'booking_code' => (string) $booking->id,
+            'title' => $booking->title,
+            'room_name' => $roomName,
+            'time_label' => $timeLabel,
+            'organizer_name' => $booking->organizer_name,
+            'status' => strtoupper((string) $booking->status),
+        ];
+
+        $sent = $znsService->sendBookingConfirmation(
+            $phone,
+            $templateData,
+            'booking_' . $booking->id
+        );
+
+        if (! $sent) {
+            Log::warning('Unable to send booking confirmation via Zalo ZNS.', [
+                'booking_id' => $booking->id,
+                'phone' => $phone,
+            ]);
         }
     }
 

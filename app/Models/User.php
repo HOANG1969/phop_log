@@ -59,4 +59,20 @@ class User extends Authenticatable
     {
         return $this->role === 'admin';
     }
+
+    /**
+     * Lấy user theo số điện thoại
+     */
+    public static function getByPhone(string $phone): ?self
+    {
+        return self::where('phone', $phone)->first();
+    }
+
+    /**
+     * Lấy user_id theo số điện thoại
+     */
+    public static function getIdByPhone(string $phone): ?int
+    {
+        return self::where('phone', $phone)->value('id');
+    }
 }
