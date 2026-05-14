@@ -249,7 +249,7 @@
     @if ($currentUser && $currentUser->isAdmin())
     <div class="modal" id="registerModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
         <div class="dialog" role="dialog" aria-modal="true" aria-label="Thêm lịch công tác" style="background: white; border-radius: 8px; box-shadow: 0 2px 16px rgba(0,0,0,0.15); max-width: 560px; width: 90%; max-height: 90vh; overflow-y: auto;">
-            <div class="dialog-head" style="padding: 18px 24px; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #0066cc, #0052a3); border-radius: 8px 8px 0 0;">
+            <div class="dialog-head" style="padding: 18px 24px; border-bottom: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; background: green; border-radius: 8px 8px 0 0;">
                 <span style="font-size: 16px; font-weight: 600; color: white; ">➕ Thêm lịch công tác</span>
                 <button class="dialog-close" id="closeRegister" type="button" style="background: none; border: none; font-size: 20px; cursor: pointer; color: white; line-height: 1;">✕</button>
             </div>
