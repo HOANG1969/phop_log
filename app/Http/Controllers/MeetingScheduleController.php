@@ -108,7 +108,7 @@ class MeetingScheduleController extends Controller
 
         try {
             $bookings = MeetingBooking::query()
-                ->with(['room', 'Đã duyệt'])
+                ->with(['room', 'approver'])
                 ->where('requested_by', $user?->id)
                 ->orderByDesc('start_at')
                 ->orderByDesc('id')
@@ -117,7 +117,7 @@ class MeetingScheduleController extends Controller
 
             if ($user?->isAdmin()) {
                 $pendingApprovalCount = MeetingBooking::query()
-                    ->where('status', 'Chờ duyệt')
+                    ->where('status', 'pending')
                     ->count();
             }
         } catch (QueryException $e) {
@@ -131,10 +131,10 @@ class MeetingScheduleController extends Controller
             'currentUser' => $user,
             'pendingApprovalCount' => $pendingApprovalCount,
             'statusLabels' => [
-                'Chờ duyệt' => 'Chờ duyệt',
-                'Đã duyệt' => 'Đã duyệt',
-                'Từ chối' => 'Từ chối',
-                'Đã hủy' => 'Đã hủy',
+                'pending' => 'Chờ duyệt',
+                'approved' => 'Đã duyệt',
+                'rejected' => 'Từ chối',
+                'cancelled' => 'Đã hủy',
             ],
         ]);
     }
@@ -429,11 +429,11 @@ class MeetingScheduleController extends Controller
                 'notes' => $validated['notes'] ?? null,
                 'snacks_requested' => (bool) ($validated['snacks_requested'] ?? false),
                 'is_online' => (bool) ($validated['is_online'] ?? false),
-                'status' => $isAdminBooking ? 'Đã duyệt' : 'Chờ duyệt',
+                'status' => $isAdminBooking ? 'approved' : 'pending',
                 'approved_at' => $isAdminBooking ? Carbon::now() : null,
             ]);
 
-            if ($booking->status === 'Chờ duyệt') {
+            if ($booking->status === 'pending') {
                 $this->sendZaloBookingNotifications($booking);
             }
 
