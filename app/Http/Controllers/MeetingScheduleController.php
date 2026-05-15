@@ -385,8 +385,9 @@ class MeetingScheduleController extends Controller
         $startAt = Carbon::createFromFormat('Y-m-d H:i', $startDate->format('Y-m-d') . ' ' . $validated['start_time']);
         $endAt = Carbon::createFromFormat('Y-m-d H:i', $endDate->format('Y-m-d') . ' ' . $validated['end_time']);
         $effectiveEndAt = $endAt;
+        $coverageEndAt = $this->normalizeEndForSlotCoverage($endAt);
 
-        if ($effectiveEndAt->lessThanOrEqualTo($startAt)) {
+        if ($coverageEndAt->lessThanOrEqualTo($startAt)) {
             return back()->withInput()->withErrors([
                 'end_time' => 'Thời gian kết thúc phải lớn hơn thời gian bắt đầu.',
             ]);
@@ -399,12 +400,19 @@ class MeetingScheduleController extends Controller
         }
 
         try {
-            $hasConflict = MeetingBooking::query()
+            $candidateBookings = MeetingBooking::query()
                 ->where('meeting_room_id', $validated['meeting_room_id'])
                 ->whereNotIn('status', ['rejected', 'cancelled'])
-                ->where('start_at', '<', $effectiveEndAt)
-                ->where('end_at', '>', $startAt)
-                ->exists();
+                ->where('start_at', '<', $coverageEndAt)
+                ->where('end_at', '>', $startAt->copy()->subHour())
+                ->get(['start_at', 'end_at']);
+
+            $hasConflict = $candidateBookings->contains(function (MeetingBooking $existingBooking) use ($startAt, $coverageEndAt): bool {
+                $existingCoverageEndAt = $this->normalizeEndForSlotCoverage($existingBooking->end_at);
+
+                return $existingBooking->start_at->lt($coverageEndAt)
+                    && $existingCoverageEndAt->gt($startAt);
+            });
 
             if ($hasConflict) {
                 return back()->withInput()->withErrors([
@@ -597,7 +605,7 @@ class MeetingScheduleController extends Controller
 
         foreach ($bookings as $booking) {
             $displayStart = $booking->start_at->greaterThan($dayStart) ? $booking->start_at : $dayStart;
-            $bookingEndAt = $booking->end_at->copy();
+            $bookingEndAt = $this->normalizeEndForSlotCoverage($booking->end_at);
             $displayEnd = $bookingEndAt->lessThan($dayEnd) ? $bookingEndAt : $dayEnd;
 
             $durationMinutes = max(15, $displayStart->diffInMinutes($displayEnd));
@@ -627,6 +635,18 @@ class MeetingScheduleController extends Controller
     private function startsInPast(Carbon $startAt): bool
     {
         return $startAt->lessThan(Carbon::now());
+    }
+
+    private function normalizeEndForSlotCoverage(Carbon $endAt): Carbon
+    {
+        $normalized = $endAt->copy();
+
+        // If users choose an exact hour (e.g. 16:00), treat it as occupying the full 16:00-16:59 slot.
+        if ((int) $normalized->minute === 0 && (int) $normalized->second === 0) {
+            $normalized->addHour();
+        }
+
+        return $normalized;
     }
 
     private function workScheduleStaffOptions(): array
