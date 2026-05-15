@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminOnly::class,
+            'idle.logout' => \App\Http\Middleware\AutoLogoutOnInactivity::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

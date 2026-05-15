@@ -16,7 +16,7 @@ Route::middleware('guest')->group(function (): void {
 	Route::post('/login', [AuthController::class, 'login'])->name('login.attempt');
 });
 
-Route::middleware('auth')->group(function (): void {
+Route::middleware(['auth', 'idle.logout'])->group(function (): void {
 	Route::get('/', [MeetingScheduleController::class, 'index'])->name('schedule.index');
 	Route::get('/my-bookings', [MeetingScheduleController::class, 'myBookings'])->name('schedule.my-bookings');
 	Route::get('/work-schedule', [MeetingScheduleController::class, 'workSchedule'])->name('schedule.work-schedule');
