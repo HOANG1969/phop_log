@@ -31,7 +31,12 @@
                 <a class="tab " href="{{ route('admin.schedule.work-schedule') }}" style="border-radius: 6px; margin-right: 0px;">LỊCH CÔNG TÁC BGĐ</a>
             @else
                 <h5>|</h5>
-                <a class="tab" href="{{ route('schedule.my-bookings') }}" style="border-radius: 6px; margin-left: 0px;">LỊCH CỦA TÔI</a>
+                <a class="tab tab-with-badge" href="{{ route('schedule.my-bookings') }}" style="border-radius: 6px; margin-left: 0px;">
+                    LỊCH CỦA TÔI
+                    @if (($myApprovedCount ?? 0) > 0)
+                        <span class="badge badge-inline">{{ $myApprovedCount }}</span>
+                    @endif
+                </a>
                 <h4>|</h4>
                 <a class="tab active " href="{{ route('schedule.work-schedule') }}" style="border-radius: 6px; margin-right: 0px;">LỊCH CÔNG TÁC BGĐ</a>
             @endif

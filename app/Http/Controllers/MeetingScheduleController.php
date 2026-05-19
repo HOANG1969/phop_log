@@ -27,6 +27,7 @@ class MeetingScheduleController extends Controller
         $areaFromQuery = strtoupper(trim((string) $request->query('area', '')));
         $selectedArea = $areaFromQuery !== '' ? $areaFromQuery : $defaultArea;
         $pendingApprovalCount = 0;
+        $myApprovedCount = 0;
 
         $databaseReady = true;
 
@@ -76,6 +77,11 @@ class MeetingScheduleController extends Controller
                 $pendingApprovalCount = MeetingBooking::query()
                     ->where('status', 'pending')
                     ->count();
+            } elseif ($user?->id) {
+                $myApprovedCount = MeetingBooking::query()
+                    ->where('requested_by', $user->id)
+                    ->whereIn('status', ['approved', 'pending'])
+                    ->count();
             }
         } catch (QueryException $e) {
             $databaseReady = false;
@@ -97,6 +103,7 @@ class MeetingScheduleController extends Controller
             'databaseReady' => $databaseReady,
             'currentUser' => $user,
             'pendingApprovalCount' => $pendingApprovalCount,
+            'myApprovedCount' => $myApprovedCount,
         ]);
     }
 
@@ -105,6 +112,7 @@ class MeetingScheduleController extends Controller
         $user = $request->user();
         $databaseReady = true;
         $pendingApprovalCount = 0;
+        $myApprovedCount = 0;
 
         try {
             $bookings = MeetingBooking::query()
@@ -119,6 +127,11 @@ class MeetingScheduleController extends Controller
                 $pendingApprovalCount = MeetingBooking::query()
                     ->where('status', 'pending')
                     ->count();
+            } elseif ($user?->id) {
+                $myApprovedCount = MeetingBooking::query()
+                    ->where('requested_by', $user->id)
+                    ->whereIn('status', ['approved', 'pending'])
+                    ->count();
             }
         } catch (QueryException $e) {
             $databaseReady = false;
@@ -130,6 +143,7 @@ class MeetingScheduleController extends Controller
             'databaseReady' => $databaseReady,
             'currentUser' => $user,
             'pendingApprovalCount' => $pendingApprovalCount,
+            'myApprovedCount' => $myApprovedCount,
             'statusLabels' => [
                 'pending' => 'Chờ duyệt',
                 'approved' => 'Đã duyệt',
@@ -144,6 +158,7 @@ class MeetingScheduleController extends Controller
         $user = $request->user();
         $databaseReady = true;
         $pendingApprovalCount = 0;
+        $myApprovedCount = 0;
         $selectedDateIso = $this->resolveDate($request->query('date'))?->format('Y-m-d') ?? Carbon::today()->format('Y-m-d');
         $monday = Carbon::parse($selectedDateIso)->startOfWeek(Carbon::MONDAY);
         $staffOptions = $this->workScheduleStaffOptions();
@@ -207,6 +222,11 @@ class MeetingScheduleController extends Controller
                 $pendingApprovalCount = MeetingBooking::query()
                     ->where('status', 'pending')
                     ->count();
+            } elseif ($user?->id) {
+                $myApprovedCount = MeetingBooking::query()
+                    ->where('requested_by', $user->id)
+                    ->whereIn('status', ['approved', 'pending'])
+                    ->count();
             }
         } catch (QueryException $e) {
             $databaseReady = false;
@@ -219,6 +239,7 @@ class MeetingScheduleController extends Controller
             'databaseReady' => $databaseReady,
             'currentUser' => $user,
             'pendingApprovalCount' => $pendingApprovalCount,
+            'myApprovedCount' => $myApprovedCount,
         ]);
     }
 
