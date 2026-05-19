@@ -161,7 +161,8 @@
                                         <div style="display:flex; align-items:center; gap:10px;">
                                             <div style="width:68px;height:68px;border-radius:50%;background:#0066cc;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.12);">
                                                 <img src="{{ asset('image/staff/' . ($staff['id'] ?? 'default') . '.jpg') }}" alt="{{ $staff['name'] ?? 'Avatar' }}" width="68" height="68" style="display:block;width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:center 8%;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="22" height="22" style="display:none;"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+                                            
+                                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="22" height="22" style="display:none;"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
                                         </div>
                                         @php
                                             $fullName = $staff['name'] ?? 'N/A';

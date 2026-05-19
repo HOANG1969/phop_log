@@ -101,7 +101,8 @@
                 <!--<a class="btn" href="{{ route('schedule.index') }}">Lịch phòng họp</a>
                 <a class="btn" href="{{ route('admin.users.index') }}">Nhân sự</a>
                 <a class="btn" href="{{ route('admin.rooms.index') }}">Phòng họp</a>-->
-                <button class="btn" type="button" style="border-radius: 6px; margin-right: 0px; font-size: 15px;" onclick="window.history.back();">Quay lại</button>
+                <!-- <a class="btn" type="button" style="border-radius: 6px; margin-right: 0px; font-size: 15px;" onclick="window.history.back();">Quay lại</a> -->
+                <a class="btn" type="button" style="border-radius: 6px; margin-right: 0px; font-size: 15px;text-decoration: none; background-color:green; color:white" href="{{ route('schedule.index') }}">Quay lại</a>
             </div>
         </div>
 

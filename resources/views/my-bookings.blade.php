@@ -67,7 +67,7 @@
         <section class="admin-wrap">
             <div class="row-flex" style="justify-content: space-between; margin-bottom: 12px;">
                 <h2 class="admin-title" style="margin: 0;">Lịch sử đăng ký của tôi</h2>
-                <a class="tab" href="{{ route('schedule.index') }}"> Quay lại</a>
+                <a class="tab" href="{{ route('schedule.index') }}" style="background-color: green; color:white; font-size:13px;"> Quay lại</a>
             </div>
 
             @if (! $databaseReady)
