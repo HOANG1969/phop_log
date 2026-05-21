@@ -32,7 +32,7 @@ class AutoLogoutOnInactivity
             }
 
             return redirect()->route('login')
-                ->withErrors(['login' => 'Bạn đã bị đăng xuất do không thao tác trong một khoảng thời gian.']);
+                ->withErrors(['login' => '']);
         }
 
         $request->session()->put('last_activity_at', $currentTime);
