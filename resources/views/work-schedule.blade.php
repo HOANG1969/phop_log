@@ -366,6 +366,8 @@
                 <form method="POST" id="editScheduleForm" action="">
                     @csrf
                     @method('PUT')
+                    <input type="hidden" name="edit_target_date" id="editTargetDate">
+                    <input type="hidden" name="edit_target_period" id="editTargetPeriod">
 
                     <div style="margin-bottom: 18px;">
                         <label style="font-weight: 600; margin-bottom: 6px; display: block; font-size: 14px;">Lãnh đạo <span style="color: #d9534f;">*</span></label>
@@ -488,7 +490,7 @@
                     deleteForm.action = '/admin/work-schedule/' + scheduleId;
                 }
 
-                _currentSchedule = { scheduleId, staffId, staffName, originalPeriod, startDate, endDate, activity };
+                _currentSchedule = { scheduleId, staffId, staffName, date, period, originalPeriod, startDate, endDate, activity };
 
                 openModal(bookingDetailModal);
             });
@@ -496,7 +498,7 @@
 
         // ── Edit button → open edit modal pre-filled ──
         document.getElementById('editScheduleBtn')?.addEventListener('click', () => {
-            const { scheduleId, staffId, originalPeriod, startDate, endDate, activity } = _currentSchedule;
+            const { scheduleId, staffId, date, period, activity } = _currentSchedule;
 
             const form = document.getElementById('editScheduleForm');
             if (form) form.action = '/admin/work-schedule/' + scheduleId;
@@ -505,18 +507,24 @@
             if (staffSelect) staffSelect.value = staffId || '';
 
             const startInput = document.getElementById('editStartDate');
-            if (startInput) startInput.value = startDate || '';
+            if (startInput) startInput.value = date || '';
 
             const endInput = document.getElementById('editEndDate');
-            if (endInput) endInput.value = endDate || '';
+            if (endInput) endInput.value = date || '';
             syncEndDateMin(startInput, endInput);
 
             const periodMap = { morning: 'editPeriodMorning', afternoon: 'editPeriodAfternoon', both: 'editPeriodBoth' };
-            const radioId = periodMap[originalPeriod];
+            const radioId = periodMap[period];
             if (radioId) {
                 const radio = document.getElementById(radioId);
                 if (radio) radio.checked = true;
             }
+
+            const targetDateInput = document.getElementById('editTargetDate');
+            if (targetDateInput) targetDateInput.value = date || '';
+
+            const targetPeriodInput = document.getElementById('editTargetPeriod');
+            if (targetPeriodInput) targetPeriodInput.value = period || '';
 
             const activityInput = document.getElementById('editActivity');
             if (activityInput) activityInput.value = activity || '';

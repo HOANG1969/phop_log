@@ -10,6 +10,7 @@ use App\Services\ZaloOaService;
 use App\Services\ZaloZnsService;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -308,6 +309,8 @@ class MeetingScheduleController extends Controller
             'end_date'   => ['required', 'date', 'after_or_equal:start_date'],
             'period'     => ['required', 'in:morning,afternoon,both'],
             'activity'   => ['required', 'string', 'max:500'],
+            'edit_target_date' => ['nullable', 'date'],
+            'edit_target_period' => ['nullable', 'in:morning,afternoon,both'],
         ], [
             'end_date.after_or_equal' => 'Ngày "Đến ngày" phải bằng hoặc sau "Từ ngày".',
         ]);
@@ -330,13 +333,65 @@ class MeetingScheduleController extends Controller
             ]);
         }
 
-        $schedule->update([
-            'user_id'    => $validated['staff_id'],
-            'start_date' => $validated['start_date'],
-            'end_date'   => $validated['end_date'],
-            'period'     => $validated['period'],
-            'activity'   => $validated['activity'],
-        ]);
+        $targetDate = $validated['edit_target_date'] ?? null;
+        $targetPeriod = $validated['edit_target_period'] ?? null;
+
+        if ($targetDate && $targetPeriod) {
+            $segments = $this->buildRemainingSegmentsAfterTargetEdit($schedule, $targetDate, $targetPeriod);
+
+            if ($segments === null) {
+                return back()->withInput()->withErrors([
+                    'start_date' => 'Không tìm thấy phần lịch cần chỉnh sửa cho ngày/buổi đã chọn.',
+                ]);
+            }
+
+            if ($this->hasSegmentConflict(
+                (int) $validated['staff_id'],
+                $validated['start_date'],
+                $validated['end_date'],
+                $validated['period'],
+                $segments,
+                (int) $schedule->user_id
+            )) {
+                return back()->withInput()->withErrors([
+                    'staff_id' => 'Lịch chỉnh sửa bị trùng với phần lịch giữ nguyên. Vui lòng điều chỉnh lại ngày hoặc buổi.',
+                ]);
+            }
+
+            DB::transaction(function () use ($schedule, $validated, $segments, $user): void {
+                $createdBy = (int) ($schedule->created_by ?: ($user?->id ?? Auth::id()));
+
+                $schedule->delete();
+
+                foreach ($segments as $segment) {
+                    WorkSchedule::create([
+                        'user_id' => $segment['user_id'],
+                        'start_date' => $segment['start_date'],
+                        'end_date' => $segment['end_date'],
+                        'period' => $segment['period'],
+                        'activity' => $segment['activity'],
+                        'created_by' => $segment['created_by'],
+                    ]);
+                }
+
+                WorkSchedule::create([
+                    'user_id'    => $validated['staff_id'],
+                    'start_date' => $validated['start_date'],
+                    'end_date'   => $validated['end_date'],
+                    'period'     => $validated['period'],
+                    'activity'   => $validated['activity'],
+                    'created_by' => $createdBy,
+                ]);
+            });
+        } else {
+            $schedule->update([
+                'user_id'    => $validated['staff_id'],
+                'start_date' => $validated['start_date'],
+                'end_date'   => $validated['end_date'],
+                'period'     => $validated['period'],
+                'activity'   => $validated['activity'],
+            ]);
+        }
 
         return redirect()->route('admin.schedule.work-schedule', [
             'date' => $validated['start_date'],
@@ -509,6 +564,133 @@ class MeetingScheduleController extends Controller
                 return null;
             }
         }
+    }
+
+    /**
+     * Keep untouched slots from the original schedule when editing a specific day/period.
+     *
+    * @return array<int, array{user_id:int,start_date:string,end_date:string,period:string,activity:string,created_by:int}>|null
+     */
+    private function buildRemainingSegmentsAfterTargetEdit(WorkSchedule $schedule, string $targetDate, string $targetPeriod): ?array
+    {
+        $start = Carbon::parse($schedule->start_date)->startOfDay();
+        $end = Carbon::parse($schedule->end_date)->startOfDay();
+        $target = Carbon::parse($targetDate)->startOfDay();
+
+        if ($target->lt($start) || $target->gt($end)) {
+            return null;
+        }
+
+        $originalPeriods = $schedule->period === 'both'
+            ? ['morning', 'afternoon']
+            : [$schedule->period];
+
+        $removePeriods = $targetPeriod === 'both'
+            ? ['morning', 'afternoon']
+            : [$targetPeriod];
+
+        $effectiveRemovePeriods = array_values(array_intersect($originalPeriods, $removePeriods));
+
+        if (empty($effectiveRemovePeriods)) {
+            return null;
+        }
+
+        $slotsByPeriod = [
+            'morning' => [],
+            'afternoon' => [],
+        ];
+
+        $cursor = $start->copy();
+        while ($cursor->lte($end)) {
+            $dateText = $cursor->toDateString();
+            foreach ($originalPeriods as $period) {
+                $isTargetSlot = $dateText === $target->toDateString() && in_array($period, $effectiveRemovePeriods, true);
+                if (! $isTargetSlot) {
+                    $slotsByPeriod[$period][] = $dateText;
+                }
+            }
+            $cursor->addDay();
+        }
+
+        $segments = [];
+        $createdBy = (int) ($schedule->created_by ?: 1);
+
+        foreach ($slotsByPeriod as $period => $dates) {
+            if (empty($dates)) {
+                continue;
+            }
+
+            $segmentStart = Carbon::parse($dates[0]);
+            $segmentEnd = Carbon::parse($dates[0]);
+
+            for ($i = 1; $i < count($dates); $i++) {
+                $current = Carbon::parse($dates[$i]);
+                if ($current->eq($segmentEnd->copy()->addDay())) {
+                    $segmentEnd = $current;
+                    continue;
+                }
+
+                $segments[] = [
+                    'user_id' => (int) $schedule->user_id,
+                    'start_date' => $segmentStart->toDateString(),
+                    'end_date' => $segmentEnd->toDateString(),
+                    'period' => $period,
+                    'activity' => (string) $schedule->activity,
+                    'created_by' => $createdBy,
+                ];
+
+                $segmentStart = $current;
+                $segmentEnd = $current;
+            }
+
+            $segments[] = [
+                'user_id' => (int) $schedule->user_id,
+                'start_date' => $segmentStart->toDateString(),
+                'end_date' => $segmentEnd->toDateString(),
+                'period' => $period,
+                'activity' => (string) $schedule->activity,
+                'created_by' => $createdBy,
+            ];
+        }
+
+        return $segments;
+    }
+
+    /**
+     * @param array<int, array{user_id:int,start_date:string,end_date:string,period:string,activity:string,created_by:int}> $segments
+     */
+    private function hasSegmentConflict(
+        int $staffId,
+        string $startDate,
+        string $endDate,
+        string $period,
+        array $segments,
+        int $originalStaffId
+    ): bool {
+        if ($staffId !== $originalStaffId) {
+            return false;
+        }
+
+        $newPeriods = $period === 'both' ? ['morning', 'afternoon'] : [$period];
+
+        foreach ($segments as $segment) {
+            if ((int) $segment['user_id'] !== $staffId) {
+                continue;
+            }
+
+            $segmentPeriods = $segment['period'] === 'both' ? ['morning', 'afternoon'] : [$segment['period']];
+            $overlapPeriods = array_intersect($newPeriods, $segmentPeriods);
+            if (empty($overlapPeriods)) {
+                continue;
+            }
+
+            $isDateOverlapped = $segment['start_date'] <= $endDate && $segment['end_date'] >= $startDate;
+            if ($isDateOverlapped) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function resolveUnitCode(string $department): ?string
