@@ -43,9 +43,16 @@ return [
 
     'zalo_zns' => [
         'access_token' => env('ZALO_ZNS_ACCESS_TOKEN', env('ZALO_OA_ACCESS_TOKEN')),
+        'access_token_expires_at' => env('ZALO_ZNS_ACCESS_TOKEN_EXPIRES_AT'),
+        'refresh_token' => env('ZALO_ZNS_REFRESH_TOKEN'),
         'api_key' => env('ZALO_ZNS_API_KEY'),
         'endpoint' => env('ZALO_ZNS_ENDPOINT', 'https://business.openapi.zalo.me/message/template'),
         'template_id' => env('ZALO_ZNS_TEMPLATE_ID'),
+        'token_endpoint' => env('ZALO_ZNS_TOKEN_ENDPOINT', 'https://oauth.zaloapp.com/v4/oa/access_token'),
+        'app_id' => env('ZALO_ZNS_APP_ID'),
+        'app_secret' => env('ZALO_ZNS_APP_SECRET'),
+        'refresh_before_seconds' => env('ZALO_ZNS_REFRESH_BEFORE_SECONDS', 300),
+        'verify_ssl' => env('ZALO_ZNS_VERIFY_SSL', true),
     ],
 
 ];

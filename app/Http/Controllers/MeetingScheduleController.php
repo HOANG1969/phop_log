@@ -6,7 +6,6 @@ use App\Models\MeetingBooking;
 use App\Models\MeetingRoom;
 use App\Models\User;
 use App\Models\WorkSchedule;
-use App\Services\ZaloOaService;
 use App\Services\ZaloZnsService;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
@@ -518,10 +517,8 @@ class MeetingScheduleController extends Controller
             ]);
 
             if ($booking->status === 'pending') {
-                $this->sendZaloBookingNotifications($booking);
+                $this->sendZnsBookingNotificationsToAdmins($booking);
             }
-
-            $this->sendZnsBookingConfirmation($booking, Auth::user()?->phone);
         } catch (QueryException $e) {
             $errorMessage = (string) $e->getMessage();
             $normalizedError = strtolower($errorMessage);
@@ -703,75 +700,46 @@ class MeetingScheduleController extends Controller
         };
     }
 
-    private function sendZaloBookingNotifications(MeetingBooking $booking): void
+    private function sendZnsBookingNotificationsToAdmins(MeetingBooking $booking): void
     {
-        $zaloOaService = app(ZaloOaService::class);
-        $roomName = $booking->room?->name ?? '-';
-        $timeLabel = $booking->start_at?->format('d/m/Y H:i') . ' - ' . $booking->end_at?->format('H:i');
-
-        $notificationData = [
-            'app_name' => 'PHOP LOG',
-            'title' => $booking->title,
-            'room_name' => $roomName,
-            'time_label' => $timeLabel,
-            'organizer_name' => $booking->organizer_name,
-            'status' => $booking->status,
-        ];
+        $znsService = app(ZaloZnsService::class);
+        $templateData = $this->buildBookingZnsTemplateData($booking);
 
         $approvers = User::query()
             ->where('role', 'admin')
             ->where('is_active', true)
-            ->whereNotNull('zalo_user_id')
-            ->get(['name', 'zalo_user_id']);
+            ->whereNotNull('phone')
+            ->get(['id', 'name', 'phone']);
 
-        $recipientUserIds = $approvers->pluck('zalo_user_id')
-            ->filter(fn ($userId) => is_string($userId) && trim($userId) !== '')
+        $recipientPhones = $approvers->pluck('phone')
+            ->filter(fn ($phone) => is_string($phone) && trim($phone) !== '')
             ->unique()
             ->values();
 
-        foreach ($recipientUserIds as $userId) {
-            $sent = $zaloOaService->sendBookingNotification((string) $userId, $notificationData);
+        foreach ($recipientPhones as $phone) {
+            $trackingId = sprintf('booking_%d_admin_%s', $booking->id, preg_replace('/\D+/', '', (string) $phone));
+            $sent = $znsService->sendBookingConfirmation((string) $phone, $templateData, $trackingId);
+
             if (! $sent) {
-                Log::warning('Unable to send booking notification via Zalo OA.', [
+                Log::warning('Unable to send booking notification via Zalo ZNS for admin phone.', [
                     'booking_id' => $booking->id,
-                    'zalo_user_id' => $userId,
+                    'phone' => $phone,
                 ]);
             }
         }
     }
 
-    private function sendZnsBookingConfirmation(MeetingBooking $booking, ?string $phone): void
+    private function buildBookingZnsTemplateData(MeetingBooking $booking): array
     {
-        if (! is_string($phone) || trim($phone) === '') {
-            return;
-        }
-
-        $znsService = app(ZaloZnsService::class);
-        $roomName = $booking->room?->name ?? '-';
         $timeLabel = $booking->start_at?->format('d/m/Y H:i') . ' - ' . $booking->end_at?->format('H:i');
+        $datetime = $booking->start_at?->format('d/m/Y') ?? now()->format('d/m/Y');
 
-        $templateData = [
-            'app_name' => config('app.name', 'PHOP LOG'),
-            'booking_code' => (string) $booking->id,
-            'title' => $booking->title,
-            'room_name' => $roomName,
-            'time_label' => $timeLabel,
-            'organizer_name' => $booking->organizer_name,
-            'status' => strtoupper((string) $booking->status),
+        return [
+            'name' => $booking->organizer_name,
+            'datetime' => $datetime,
+            'department' => $booking->organizer_department,
+            'content' => 'Đang chờ phê duyệt.',
         ];
-
-        $sent = $znsService->sendBookingConfirmation(
-            $phone,
-            $templateData,
-            'booking_' . $booking->id
-        );
-
-        if (! $sent) {
-            Log::warning('Unable to send booking confirmation via Zalo ZNS.', [
-                'booking_id' => $booking->id,
-                'phone' => $phone,
-            ]);
-        }
     }
 
     private function resolveNowLineMinutes(Carbon $selectedDate): ?int
