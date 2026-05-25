@@ -731,15 +731,29 @@ class MeetingScheduleController extends Controller
 
     private function buildBookingZnsTemplateData(MeetingBooking $booking): array
     {
-        $timeLabel = $booking->start_at?->format('d/m/Y H:i') . ' - ' . $booking->end_at?->format('H:i');
-        $datetime = $booking->start_at?->format('d/m/Y') ?? now()->format('d/m/Y');
+        $datetime = $booking->start_at?->copy()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y')
+            ?? now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y');
 
         return [
-            'name' => $booking->organizer_name,
+            'name' => $this->limitZnsTemplateValue((string) $booking->organizer_name, 60),
             'datetime' => $datetime,
-            'department' => $booking->organizer_department,
+            'department' => $this->limitZnsTemplateValue((string) $booking->organizer_department, 60),
             'content' => 'Đang chờ phê duyệt.',
         ];
+    }
+
+    private function limitZnsTemplateValue(string $value, int $maxLength): string
+    {
+        $value = trim($value);
+        if ($value === '') {
+            return '-';
+        }
+
+        if (function_exists('mb_substr')) {
+            return mb_substr($value, 0, $maxLength);
+        }
+
+        return substr($value, 0, $maxLength);
     }
 
     private function resolveNowLineMinutes(Carbon $selectedDate): ?int

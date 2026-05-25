@@ -13,6 +13,16 @@ class ZaloZnsService
 
     public function sendBookingConfirmation(string $phone, array $templateData, ?string $trackingId = null): bool
     {
+        $result = $this->debugSendBookingConfirmation($phone, $templateData, $trackingId);
+
+        return (bool) ($result['ok'] ?? false);
+    }
+
+    /**
+     * @return array{ok:bool,status:int,response_data:array<string,mixed>|null,error:string|null}
+     */
+    public function debugSendBookingConfirmation(string $phone, array $templateData, ?string $trackingId = null): array
+    {
         $endpoint = trim((string) config('services.zalo_zns.endpoint'));
         $accessToken = trim((string) ($this->tokenService->getAccessToken() ?? ''));
         $templateId = config('services.zalo_zns.template_id');
@@ -26,7 +36,12 @@ class ZaloZnsService
                 'template_id_set' => ! empty($templateId),
             ]);
 
-            return false;
+            return [
+                'ok' => false,
+                'status' => 0,
+                'response_data' => null,
+                'error' => 'missing_configuration',
+            ];
         }
 
         $normalizedPhone = $this->normalizePhone($phone);
@@ -35,7 +50,12 @@ class ZaloZnsService
                 'phone' => $phone,
             ]);
 
-            return false;
+            return [
+                'ok' => false,
+                'status' => 0,
+                'response_data' => null,
+                'error' => 'invalid_phone',
+            ];
         }
 
         $payload = [
@@ -54,7 +74,9 @@ class ZaloZnsService
             }
         }
 
-        return $result['ok'];
+        $result['error'] = $result['ok'] ? null : 'api_request_failed';
+
+        return $result;
     }
 
     /**
