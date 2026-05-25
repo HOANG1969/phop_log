@@ -19,7 +19,7 @@ class ZaloZnsService
     }
 
     /**
-     * @return array{ok:bool,status:int,response_data:array<string,mixed>|null,error:string|null}
+     * @return array{ok:bool,status:int,response_data:array<string,mixed>|null,error:string|null,transport_error:string|null}
      */
     public function debugSendBookingConfirmation(string $phone, array $templateData, ?string $trackingId = null): array
     {
@@ -41,6 +41,7 @@ class ZaloZnsService
                 'status' => 0,
                 'response_data' => null,
                 'error' => 'missing_configuration',
+                'transport_error' => null,
             ];
         }
 
@@ -55,6 +56,7 @@ class ZaloZnsService
                 'status' => 0,
                 'response_data' => null,
                 'error' => 'invalid_phone',
+                'transport_error' => null,
             ];
         }
 
@@ -75,12 +77,13 @@ class ZaloZnsService
         }
 
         $result['error'] = $result['ok'] ? null : 'api_request_failed';
+          $result['transport_error'] = $result['transport_error'] ?? null;
 
         return $result;
     }
 
     /**
-     * @return array{ok:bool,status:int,response_data:array<string,mixed>|null}
+      * @return array{ok:bool,status:int,response_data:array<string,mixed>|null,transport_error:string|null}
      */
     private function dispatchTemplateRequest(
         string $endpoint,
@@ -122,6 +125,7 @@ class ZaloZnsService
                     'ok' => false,
                     'status' => $status,
                     'response_data' => is_array($responseData) ? $responseData : null,
+                    'transport_error' => null,
                 ];
             }
 
@@ -135,6 +139,7 @@ class ZaloZnsService
                     'ok' => false,
                     'status' => $status,
                     'response_data' => is_array($responseData) ? $responseData : null,
+                    'transport_error' => null,
                 ];
             }
 
@@ -142,6 +147,7 @@ class ZaloZnsService
                 'ok' => true,
                 'status' => $status,
                 'response_data' => is_array($responseData) ? $responseData : null,
+                'transport_error' => null,
             ];
         } catch (\Throwable $e) {
             Log::error('Zalo ZNS notification exception.', [
@@ -153,6 +159,7 @@ class ZaloZnsService
                 'ok' => false,
                 'status' => 0,
                 'response_data' => null,
+                'transport_error' => $e->getMessage(),
             ];
         }
     }
@@ -168,6 +175,11 @@ class ZaloZnsService
 
         if (! is_array($responseData)) {
             return false;
+        }
+
+        $errorCode = (int) ($responseData['error'] ?? 0);
+        if (in_array($errorCode, [-124, -123, -118, 401, 403], true)) {
+            return true;
         }
 
         $message = strtolower((string) ($responseData['message'] ?? ''));
