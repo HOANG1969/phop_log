@@ -120,6 +120,28 @@ class ZaloZbsTokenService
                 ]
             );
 
+            $configRefreshToken = $this->configRefreshToken();
+            $configAccessToken = $this->configAccessToken();
+            $configExpiresAt = $this->configAccessTokenExpiresAt();
+
+            $shouldSave = false;
+
+            // Keep DB token state in sync with .env when credentials are rotated manually.
+            if ($configRefreshToken !== null && $configRefreshToken !== $state->refresh_token) {
+                $state->refresh_token = $configRefreshToken;
+                $shouldSave = true;
+            }
+
+            if ($configAccessToken !== null && $configAccessToken !== $state->access_token) {
+                $state->access_token = $configAccessToken;
+                $state->expires_at = $configExpiresAt;
+                $shouldSave = true;
+            }
+
+            if ($shouldSave) {
+                $state->save();
+            }
+
             if (empty($state->refresh_token) && $this->configRefreshToken() !== null) {
                 $state->refresh_token = $this->configRefreshToken();
                 $state->save();
