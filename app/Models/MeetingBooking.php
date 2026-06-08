@@ -18,6 +18,7 @@ class MeetingBooking extends Model
         'start_at',
         'end_at',
         'organizer_name',
+        'organizer_phone',
         'organizer_department',
         'internal_attendees',
         'external_attendees',

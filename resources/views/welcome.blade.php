@@ -253,11 +253,17 @@
 
                     <div class="f-row">
                         <div class="f-label">Người đăng ký <span class="req">*</span></div>
-                        <div class="f-inline" style="gap: 8px;">
-                            <input class="field" name="organizer_name" value="{{ old('organizer_name') }}" placeholder="Họ và tên" required style="flex:2; width: 300px;">
-                            <input class="field" name="organizer_department" value="{{ old('organizer_department') }}" placeholder="Phòng ban" required style="flex:1; width: 200px;">
-                            
+                        <div class="f-inline organizer-inline">
+                            <input class="field" name="organizer_name" value="{{ old('organizer_name') }}" placeholder="Họ và tên" required>
+                            <input class="field" name="organizer_phone" value="{{ old('organizer_phone') }}" placeholder="Số điện thoại" required>
+                            <select class="field" name="organizer_department" required>
+                                <option value="">Phòng ban</option>
+                                @foreach (['TCHC', 'KTAT', 'TCKT', 'KHĐT', 'KTPT', 'TMLG', 'KCTV'] as $departmentOption)
+                                    <option value="{{ $departmentOption }}" @selected(old('organizer_department') === $departmentOption)>{{ $departmentOption }}</option>
+                                @endforeach
+                            </select>
                         </div>
+                        <div class="hint organizer-hint">Vui lòng nhập đúng số điện thoại.</div>
                     </div>
 
                     <div class="f-row">

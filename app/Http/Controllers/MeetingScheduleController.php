@@ -434,6 +434,7 @@ class MeetingScheduleController extends Controller
         $validated = $request->validate([
             'meeting_room_id' => ['required', 'integer', 'exists:meeting_rooms,id'],
             'organizer_name' => ['required', 'string', 'max:255'],
+            'organizer_phone' => ['required', 'string', 'max:20', 'regex:/^(0|84|\+84)[0-9]{8,11}$/'],
             'organizer_department' => ['required', 'string', 'max:120'],
             'title' => ['required', 'string', 'max:255'],
             'start_date' => ['required', 'string'],
@@ -502,6 +503,7 @@ class MeetingScheduleController extends Controller
                 'requested_by' => Auth::id(),
                 'approved_by' => $isAdminBooking ? Auth::id() : null,
                 'organizer_name' => $validated['organizer_name'],
+                'organizer_phone' => trim($validated['organizer_phone']),
                 'organizer_department' => trim($validated['organizer_department']),
                 'title' => $validated['title'],
                 'start_at' => $startAt,

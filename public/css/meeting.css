@@ -800,6 +800,16 @@ body {
     gap: 8px;
 }
 
+.organizer-inline {
+    grid-template-columns: 2fr 1fr 1fr;
+}
+
+.organizer-hint {
+    margin-top: 6px;
+    line-height: 1.35;
+    word-break: normal;
+}
+
 .field {
     height: 34px;
     border: 1px solid #cfdae9;
@@ -887,6 +897,7 @@ body {
     .f-row { grid-template-columns: 1fr; }
     .f-label { line-height: 1.2; }
     .f-inline { grid-template-columns: 1fr 1fr; }
+    .organizer-inline { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 760px) {
@@ -948,6 +959,7 @@ body {
         margin-left: 0;
     }
     .f-inline { grid-template-columns: 1fr; }
+    .organizer-inline { grid-template-columns: 1fr; }
 
     .login-page {
         padding: 14px;

@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\MeetingBooking;
+use App\Services\ZaloZnsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class BookingApprovalController extends Controller
@@ -44,6 +46,8 @@ class BookingApprovalController extends Controller
             'rejection_reason' => null,
         ]);
 
+        $this->notifyRequesterApproved($booking->fresh(['requester', 'room']));
+
         return back()->with('success', 'Đã phê duyệt lịch họp.');
     }
 
@@ -76,5 +80,35 @@ class BookingApprovalController extends Controller
         $booking->update(['status' => 'cancelled']);
 
         return back()->with('success', 'Đã hủy lịch họp.');
+    }
+
+    private function notifyRequesterApproved(MeetingBooking $booking): void
+    {
+        $phone = trim((string) ($booking->organizer_phone ?: $booking->requester?->phone ?: ''));
+        if ($phone === '') {
+            Log::warning('Skip requester approval notification due to missing phone.', [
+                'booking_id' => $booking->id,
+            ]);
+
+            return;
+        }
+
+        $templateData = [
+            'name' => (string) $booking->organizer_name,
+            'datetime' => $booking->start_at?->copy()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y')
+                ?? now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y'),
+            'department' => (string) $booking->organizer_department,
+            'content' => 'Da duoc phe duyet.',
+        ];
+
+        $trackingId = sprintf('booking_%d_requester_%s', $booking->id, preg_replace('/\D+/', '', $phone));
+        $sent = app(ZaloZnsService::class)->sendBookingConfirmation($phone, $templateData, $trackingId);
+
+        if (! $sent) {
+            Log::warning('Unable to send approval notification via Zalo ZNS to requester.', [
+                'booking_id' => $booking->id,
+                'phone' => $phone,
+            ]);
+        }
     }
 }
