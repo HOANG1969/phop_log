@@ -516,9 +516,7 @@ class MeetingScheduleController extends Controller
                 'approved_at' => $isAdminBooking ? Carbon::now() : null,
             ]);
 
-            if ($booking->status === 'pending') {
-                $this->sendZnsBookingNotificationsToAdmins($booking);
-            }
+            $this->sendZnsBookingNotificationsToAdmins($booking);
         } catch (QueryException $e) {
             $errorMessage = (string) $e->getMessage();
             $normalizedError = strtolower($errorMessage);
@@ -734,11 +732,19 @@ class MeetingScheduleController extends Controller
         $datetime = $booking->start_at?->copy()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y')
             ?? now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y');
 
+        $statusText = match ($booking->status) {
+            'approved' => 'Da duoc phe duyet.',
+            'pending' => 'Dang cho phe duyet.',
+            'rejected' => 'Da bi tu choi.',
+            'cancelled' => 'Da bi huy.',
+            default => 'Dang xu ly.',
+        };
+
         return [
             'name' => $this->limitZnsTemplateValue((string) $booking->organizer_name, 60),
             'datetime' => $datetime,
             'department' => $this->limitZnsTemplateValue((string) $booking->organizer_department, 60),
-            'content' => 'Đang chờ phê duyệt.',
+            'content' => $statusText,
         ];
     }
 
