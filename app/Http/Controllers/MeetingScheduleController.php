@@ -516,6 +516,7 @@ class MeetingScheduleController extends Controller
                 'approved_at' => $isAdminBooking ? Carbon::now() : null,
             ]);
 
+            $booking->refresh();
             $this->sendZnsBookingNotificationsToAdmins($booking);
         } catch (QueryException $e) {
             $errorMessage = (string) $e->getMessage();
@@ -714,12 +715,32 @@ class MeetingScheduleController extends Controller
             ->unique()
             ->values();
 
+        if ($recipientPhones->isEmpty()) {
+            Log::warning('No admin phone found for Zalo ZNS booking notification.', [
+                'booking_id' => $booking->id,
+                'status' => $booking->status,
+            ]);
+
+            return;
+        }
+
+        Log::info('Dispatching Zalo ZNS booking notifications to admins.', [
+            'booking_id' => $booking->id,
+            'status' => $booking->status,
+            'recipient_count' => $recipientPhones->count(),
+        ]);
+
         foreach ($recipientPhones as $phone) {
             $trackingId = sprintf('booking_%d_admin_%s', $booking->id, preg_replace('/\D+/', '', (string) $phone));
             $sent = $znsService->sendBookingConfirmation((string) $phone, $templateData, $trackingId);
 
             if (! $sent) {
                 Log::warning('Unable to send booking notification via Zalo ZNS for admin phone.', [
+                    'booking_id' => $booking->id,
+                    'phone' => $phone,
+                ]);
+            } else {
+                Log::info('Sent booking notification via Zalo ZNS for admin phone.', [
                     'booking_id' => $booking->id,
                     'phone' => $phone,
                 ]);
