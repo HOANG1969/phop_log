@@ -205,14 +205,27 @@
                 <form method="POST" action="{{ route('schedule.bookings.store') }}">
                     @csrf
                     <input type="hidden" name="area" value="{{ $selectedArea }}">
+                    @php
+                        $hourOptions = range(0, 23);
+                    @endphp
 
                     <div class="f-row">
                         <div class="f-label">Bắt đầu <span class="req">*</span></div>
                         <div class="f-inline">
                             <input class="field"  id="registerStartDate" type="date" name="start_date" value="{{ old('start_date', $selectedDateIso) }}" required>
-                            <input class="field"  style="width: 125px; " id="registerStartTime" type="time" name="start_time" value="{{ old('start_time', '12:00') }}" step="300" required>
+                            <select class="field" style="width: 125px;" id="registerStartTime" name="start_time" required>
+                                @foreach ($hourOptions as $hour)
+                                    @php $hourText = sprintf('%02d:00', $hour); @endphp
+                                    <option value="{{ $hourText }}" @selected(old('start_time', '12:00') === $hourText)>{{ $hourText }}</option>
+                                @endforeach
+                            </select>
                             <input class="field" id="registerEndDate" type="date" name="end_date" value="{{ old('end_date', $selectedDateIso) }}" required>
-                            <input class="field" id="registerEndTime" type="time" name="end_time" value="{{ old('end_time', '13:00') }}" step="300" required>
+                            <select class="field" style="width: 125px;" id="registerEndTime" name="end_time" required>
+                                @foreach ($hourOptions as $hour)
+                                    @php $hourText = sprintf('%02d:00', $hour); @endphp
+                                    <option value="{{ $hourText }}" @selected(old('end_time', '13:00') === $hourText)>{{ $hourText }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
 
