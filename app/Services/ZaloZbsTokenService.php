@@ -13,6 +13,11 @@ class ZaloZbsTokenService
 {
     private const PROVIDER = 'zalo_zns';
 
+    public function refreshEnabled(): bool
+    {
+        return filter_var(config('services.zalo_zns.refresh_enabled', false), FILTER_VALIDATE_BOOL);
+    }
+
     public function getAccessToken(): ?string
     {
         $state = $this->getTokenState();
@@ -21,7 +26,7 @@ class ZaloZbsTokenService
             return $this->configAccessToken();
         }
 
-        if ($this->needsRefresh($state)) {
+        if ($this->needsRefresh($state) && $this->refreshEnabled()) {
             $refreshed = $this->refreshAccessToken();
             if ($refreshed !== null) {
                 return $refreshed;
@@ -33,6 +38,12 @@ class ZaloZbsTokenService
 
     public function refreshAccessToken(bool $force = false): ?string
     {
+        if (! $this->refreshEnabled()) {
+            Log::info('Zalo ZBS token refresh skipped because refresh is disabled by configuration.');
+
+            return $force ? null : ($this->getTokenState()?->access_token ?: $this->configAccessToken());
+        }
+
         $state = $this->getTokenState();
 
         if ($state === null) {
@@ -92,6 +103,10 @@ class ZaloZbsTokenService
 
     private function refreshWithoutPersistence(bool $force): ?string
     {
+        if (! $this->refreshEnabled()) {
+            return $force ? null : $this->configAccessToken();
+        }
+
         $accessToken = $this->configAccessToken();
 
         if (! $force && $accessToken !== null) {

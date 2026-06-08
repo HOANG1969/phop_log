@@ -206,7 +206,12 @@
                     @csrf
                     <input type="hidden" name="area" value="{{ $selectedArea }}">
                     @php
-                        $hourOptions = range(0, 23);
+                        $timeOptions = [];
+                        for ($hour = 0; $hour < 24; $hour++) {
+                            foreach ([0, 30] as $minute) {
+                                $timeOptions[] = sprintf('%02d:%02d', $hour, $minute);
+                            }
+                        }
                     @endphp
 
                     <div class="f-row">
@@ -214,16 +219,14 @@
                         <div class="f-inline">
                             <input class="field"  id="registerStartDate" type="date" name="start_date" value="{{ old('start_date', $selectedDateIso) }}" required>
                             <select class="field" style="width: 125px;" id="registerStartTime" name="start_time" required>
-                                @foreach ($hourOptions as $hour)
-                                    @php $hourText = sprintf('%02d:00', $hour); @endphp
-                                    <option value="{{ $hourText }}" @selected(old('start_time', '12:00') === $hourText)>{{ $hourText }}</option>
+                                @foreach ($timeOptions as $timeOption)
+                                    <option value="{{ $timeOption }}" @selected(old('start_time', '12:00') === $timeOption)>{{ $timeOption }}</option>
                                 @endforeach
                             </select>
                             <input class="field" id="registerEndDate" type="date" name="end_date" value="{{ old('end_date', $selectedDateIso) }}" required>
                             <select class="field" style="width: 125px;" id="registerEndTime" name="end_time" required>
-                                @foreach ($hourOptions as $hour)
-                                    @php $hourText = sprintf('%02d:00', $hour); @endphp
-                                    <option value="{{ $hourText }}" @selected(old('end_time', '13:00') === $hourText)>{{ $hourText }}</option>
+                                @foreach ($timeOptions as $timeOption)
+                                    <option value="{{ $timeOption }}" @selected(old('end_time', '13:00') === $timeOption)>{{ $timeOption }}</option>
                                 @endforeach
                             </select>
                         </div>

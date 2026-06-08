@@ -100,6 +100,7 @@ class ZaloZnsTestCommand extends Command
         $this->line('Diag endpoint    : ' . ($endpoint !== '' ? $endpoint : '(empty)'));
         $this->line('Diag template_id : ' . ($templateId !== '' ? $templateId : '(empty)'));
         $this->line('Diag api_key_set : ' . ($apiKey !== '' ? 'true' : 'false'));
+        $this->line('Diag refresh_on  : ' . ($tokenService->refreshEnabled() ? 'true' : 'false'));
         $this->line('Diag verify_ssl  : ' . ($verifySsl ? 'true' : 'false'));
         $this->line('Diag token       : ' . $tokenPreview . ' len=' . strlen($token));
     }

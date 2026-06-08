@@ -15,6 +15,12 @@ class ZaloZbsRefreshTokenCommand extends Command
     {
         $force = (bool) $this->option('force');
 
+        if (! $tokenService->refreshEnabled()) {
+            $this->warn('ZBS refresh dang bi khoa boi cau hinh. Bat ZALO_ZNS_REFRESH_ENABLED=true tren VPS de cho phep refresh.');
+
+            return self::FAILURE;
+        }
+
         $token = $tokenService->refreshAccessToken($force);
 
         if (! is_string($token) || trim($token) === '') {
