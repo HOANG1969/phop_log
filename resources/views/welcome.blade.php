@@ -196,7 +196,7 @@
 
     <div class="modal {{ $errors->any() ? 'open' : '' }}" id="registerModal">
         <div class="dialog" role="dialog" aria-modal="true" aria-label="Đăng ký phòng họp" style="width: 800px;">
-            <div class="dialog-head" style="font-size: 18px; font-weight: 500;">
+            <div class="dialog-head" style="font-size: 18px; font-weight: 500;background-color: green; color: white;">
                 <span>✎ Đăng ký</span>
                 <button class="dialog-close" id="closeRegister" type="button">✕</button>
             </div>
@@ -263,7 +263,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="hint organizer-hint">Vui lòng nhập đúng số điện thoại.</div>
+                        <div class="hint organizer-hint" style="font-size: 12px; font-style: italic;">Vui lòng nhập đúng số điện thoại.</div>
                     </div>
 
                     <div class="f-row">
@@ -275,7 +275,7 @@
                         <div class="f-label">Trái cây, bánh kẹo</div>
                         <label class="row-flex">
                             <input class="check" type="checkbox" name="snacks_requested" value="1" @checked(old('snacks_requested'))>
-                            <span class="hint">Trái cây, bánh kẹo sẽ được phục vụ sau khi được duyệt</span>
+                            <span class="hint" style="font-size: 12px;">Trái cây, bánh kẹo sẽ được phục vụ sau khi được duyệt</span>
                         </label>
                     </div>
 
@@ -299,8 +299,8 @@
                         <textarea class="field textarea" name="notes" placeholder="Ghi chú thêm...">{{ old('notes') }}</textarea>
                     </div> -->
 
-                    <div class="submit-wrap">
-                        <button class="submit" type="submit" @disabled(! $databaseReady)>✎ ĐĂNG KÝ</button>
+                    <div class="submit-wrap" ">
+                        <button class="submit" type="submit" @disabled(! $databaseReady)style="background-color: green;">✎ ĐĂNG KÝ</button>
                     </div>
                 </form>
             </div>
