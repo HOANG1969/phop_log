@@ -111,13 +111,7 @@
                         <div class="cell" style="font-size: 14px; color: #000;">Danh sách phòng họp </div>
                         @foreach ($hours as $hour)
                             <div class="cell time" style="color: #5c0feb;font-size: 12px;">
-                                @if ($hour < 12)
-                                    {{ $hour }} AM
-                                @elseif ($hour === 12)
-                                    12 PM
-                                @else
-                                    {{ $hour - 12 }} PM
-                                @endif
+                                {{ $hour }}
                             </div>
                         @endforeach
                     </div>

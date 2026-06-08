@@ -146,19 +146,7 @@
         });
     }
 
-    if (modal) {
-        modal.addEventListener("click", function (event) {
-            if (event.target === modal) {
-                modal.classList.remove("open");
-            }
-        });
-    }
-
-    document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape" && modal) {
-            modal.classList.remove("open");
-        }
-    });
+    // Keep modal open when clicking backdrop; close only via explicit controls.
 
     if (prevDate) {
         prevDate.addEventListener("click", function () {
@@ -370,13 +358,7 @@
         });
     }
 
-    if (bookingDetailModal) {
-        bookingDetailModal.addEventListener("click", function (event) {
-            if (event.target === bookingDetailModal) {
-                bookingDetailModal.classList.remove("open");
-            }
-        });
-    }
+    // Keep booking detail modal open when clicking backdrop.
 
     document.addEventListener("scroll", hideHoverCard, true);
 

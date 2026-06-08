@@ -460,9 +460,7 @@
         editStartDate?.addEventListener('change', () => syncEndDateMin(editStartDate, editEndDate));
         syncEndDateMin(editStartDate, editEndDate);
 
-        [registerModal, bookingDetailModal, editModal].forEach(m => {
-            m?.addEventListener('click', e => { if (e.target === m) closeModal(m); });
-        });
+        // Keep modals open when clicking backdrop; close via explicit controls only.
 
         // Store current detail data for edit button
         let _currentSchedule = {};

@@ -43,6 +43,7 @@ class ZaloZbsTokenService
             return $state->access_token ?: $this->configAccessToken();
         }
 
+        $configRefreshToken = $this->configRefreshToken();
         $refreshToken = $this->resolveRefreshToken($state->refresh_token);
         if ($refreshToken === null) {
             Log::warning('Zalo ZBS refresh token is missing.');
@@ -55,6 +56,17 @@ class ZaloZbsTokenService
         }
 
         $refreshed = $this->requestNewToken($refreshToken);
+
+        if (
+            $refreshed === null
+            && is_string($configRefreshToken)
+            && trim($configRefreshToken) !== ''
+            && trim($configRefreshToken) !== trim((string) $refreshToken)
+        ) {
+            Log::warning('Retry Zalo ZBS refresh with .env refresh token due to DB refresh failure.');
+
+            $refreshed = $this->requestNewToken(trim($configRefreshToken));
+        }
 
         if ($refreshed === null) {
             if ($force) {
