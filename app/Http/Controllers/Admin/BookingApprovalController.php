@@ -95,10 +95,11 @@ class BookingApprovalController extends Controller
 
         $templateData = [
             'name' => (string) $booking->organizer_name,
-            'datetime' => $booking->start_at?->copy()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y')
-                ?? now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y'),
+            'datetime' => $booking->start_at?->copy()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i')
+                ?? now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i'),
+            'noi_dung' => (string) $booking->title,
             'department' => (string) $booking->organizer_department,
-            'content' => 'Da duoc phe duyet.',
+            'scontent' => 'Da duoc phe duyet.',
         ];
 
         $trackingId = sprintf('booking_%d_requester_%s', $booking->id, preg_replace('/\D+/', '', $phone));

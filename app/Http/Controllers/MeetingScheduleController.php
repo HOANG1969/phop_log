@@ -752,8 +752,18 @@ class MeetingScheduleController extends Controller
 
     private function buildBookingZnsTemplateData(MeetingBooking $booking): array
     {
-        $datetime = $booking->start_at?->copy()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y')
-            ?? now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y');
+        $startAt = $booking->start_at?->copy()->timezone('Asia/Ho_Chi_Minh');
+        $endAt = $booking->end_at?->copy()->timezone('Asia/Ho_Chi_Minh');
+        $datetime = $startAt?->format('d/m/Y H:i')
+            ?? now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i');
+        $noiDung = $this->limitZnsTemplateValue((string) $booking->title, 120);
+
+        if ($startAt && $endAt) {
+            $noiDung = $this->limitZnsTemplateValue(
+                sprintf('%s (%s-%s)', (string) $booking->title, $startAt->format('H:i'), $endAt->format('H:i')),
+                120
+            );
+        }
 
         $statusText = match ($booking->status) {
             'approved' => 'Da duoc phe duyet.',
@@ -766,8 +776,9 @@ class MeetingScheduleController extends Controller
         return [
             'name' => $this->limitZnsTemplateValue((string) $booking->organizer_name, 60),
             'datetime' => $datetime,
+            'noi_dung' => $noiDung,
             'department' => $this->limitZnsTemplateValue((string) $booking->organizer_department, 60),
-            'content' => $statusText,
+            'scontent' => $statusText,
         ];
     }
 

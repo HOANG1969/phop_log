@@ -48,28 +48,38 @@ class ZaloZnsTestCommand extends Command
     }
 
     /**
-     * @return array{name:string,datetime:string,department:string,content:string}
+     * @return array{name:string,datetime:string,noi_dung:string,department:string,scontent:string}
      */
     private function buildTemplateData(mixed $bookingId): array
     {
         if ($bookingId !== null && $bookingId !== '') {
             $booking = MeetingBooking::find((int) $bookingId);
             if ($booking) {
+                $startAt = $booking->start_at?->copy()->timezone('Asia/Ho_Chi_Minh');
+                $endAt = $booking->end_at?->copy()->timezone('Asia/Ho_Chi_Minh');
+                $noiDung = (string) $booking->title;
+
+                if ($startAt && $endAt) {
+                    $noiDung = sprintf('%s (%s-%s)', (string) $booking->title, $startAt->format('H:i'), $endAt->format('H:i'));
+                }
+
                 return [
                     'name' => $this->limit((string) $booking->organizer_name, 60),
-                    'datetime' => $booking->start_at?->copy()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y')
-                        ?? now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y'),
+                    'datetime' => $booking->start_at?->copy()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i')
+                        ?? now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i'),
+                    'noi_dung' => $this->limit($noiDung, 120),
                     'department' => $this->limit((string) $booking->organizer_department, 60),
-                    'content' => 'Dang cho phe duyet.',
+                    'scontent' => 'Dang cho phe duyet.',
                 ];
             }
         }
 
         return [
             'name' => 'TEST ZNS',
-            'datetime' => now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y'),
+            'datetime' => now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i'),
+            'noi_dung' => 'Test noi dung thong bao',
             'department' => 'KVP',
-            'content' => 'Test gui thong bao.',
+            'scontent' => 'Test gui thong bao.',
         ];
     }
 
