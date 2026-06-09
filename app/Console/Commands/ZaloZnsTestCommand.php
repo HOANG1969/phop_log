@@ -48,7 +48,7 @@ class ZaloZnsTestCommand extends Command
     }
 
     /**
-     * @return array{name:string,datetime:string,noi_dung:string,department:string,scontent:string}
+     * @return array{name:string,datetime:string,time:string,meeting_date:string,meeting_time:string,noi_dung:string,department:string,deparment:string,content:string}
      */
     private function buildTemplateData(mixed $bookingId): array
     {
@@ -57,29 +57,39 @@ class ZaloZnsTestCommand extends Command
             if ($booking) {
                 $startAt = $booking->start_at?->copy()->timezone('Asia/Ho_Chi_Minh');
                 $endAt = $booking->end_at?->copy()->timezone('Asia/Ho_Chi_Minh');
+                $meetingDate = $startAt?->format('d/m/Y')
+                    ?? now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y');
+                $meetingTime = $startAt
+                    ? ($endAt
+                        ? $startAt->format('H:i') . '-' . $endAt->format('H:i')
+                        : $startAt->format('H:i'))
+                    : '-';
                 $noiDung = (string) $booking->title;
-
-                if ($startAt && $endAt) {
-                    $noiDung = sprintf('%s (%s-%s)', (string) $booking->title, $startAt->format('H:i'), $endAt->format('H:i'));
-                }
 
                 return [
                     'name' => $this->limit((string) $booking->organizer_name, 60),
-                    'datetime' => $booking->start_at?->copy()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i')
-                        ?? now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i'),
+                    'datetime' => $meetingDate,
+                    'time' => $meetingTime,
+                    'meeting_date' => $meetingDate,
+                    'meeting_time' => $meetingTime,
                     'noi_dung' => $this->limit($noiDung, 120),
                     'department' => $this->limit((string) $booking->organizer_department, 60),
-                    'scontent' => 'Dang cho phe duyet.',
+                    'deparment' => $this->limit((string) $booking->organizer_department, 60),
+                    'content' => 'Dang cho phe duyet.',
                 ];
             }
         }
 
         return [
             'name' => 'TEST ZNS',
-            'datetime' => now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i'),
+            'datetime' => now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y'),
+            'time' => now()->timezone('Asia/Ho_Chi_Minh')->format('H:i'),
+            'meeting_date' => now()->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y'),
+            'meeting_time' => now()->timezone('Asia/Ho_Chi_Minh')->format('H:i'),
             'noi_dung' => 'Test noi dung thong bao',
             'department' => 'KVP',
-            'scontent' => 'Test gui thong bao.',
+            'deparment' => 'KVP',
+            'content' => 'Test gui thong bao.',
         ];
     }
 
